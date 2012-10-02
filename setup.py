@@ -20,12 +20,19 @@ for k,v in EXTRAS_REQUIRES.iteritems():
 setup(
     name='linkins',
     version='0.0.1',
-    description=(
+    description='linkins -- Safely link directory structures',
+    long_description=(
         "linkins is a command line tool which allows users to link a "
         "directory structure. It provides the ability to execute "
         "user-defined scripts at each level of the directory hierarchy "
         "and a safe way to backup existing files or directories."
         ),
+    license='GPL',
+    author='Andres Buritica',
+    author_email='andres@thelinuxkid.com',
+    maintainer='Andres Buritica',
+    maintainer_email='andres@thelinuxkid.com',
+    url='https://github.com/andresburitica/linkins',
     packages = find_packages(),
     test_suite='nose.collector',
     install_requires=[
