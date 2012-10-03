@@ -8,7 +8,7 @@ def abs_path(path):
     return path
 
 def splitall(path):
-    # TODO test to see1 if this works across platforms. If the behavior
+    # TODO test to see if this works across platforms. If the behavior
     # of os.path.split is consistent then it should.
     def _splitall(path):
         (head,tail) = os.path.split(path)
