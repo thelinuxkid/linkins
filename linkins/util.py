@@ -1,5 +1,4 @@
 import os
-import itertools
 
 # Avoid name clash with os.path.abspath
 def abs_path(path):
@@ -39,23 +38,3 @@ def splitall(path):
     else:
         for s in _splitall(path):
             yield s
-
-def splitondir(on, path):
-    oparts = splitall(on)
-    parts = splitall(path)
-    matched = False
-    for (opart,part) in itertools.izip(oparts,parts):
-        if opart != part:
-            break
-        matched = True
-    if not matched:
-        # Could not match any characters
-        return None
-    if opart == '':
-        # ondir ends with a slash or is a relative path
-        parts = itertools.chain([part], parts)
-    try:
-        return os.path.join(*parts)
-    except TypeError:
-        # Processed the entire path and everything was a match
-        return ''

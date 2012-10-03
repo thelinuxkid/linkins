@@ -1,8 +1,6 @@
 import os
 import logging
 
-from linkins import util
-
 log = logging.getLogger(__name__)
 
 def make(
@@ -24,7 +22,7 @@ def make(
     for (path, dirs, files) in os.walk(srcdir):
         for file_ in files:
             srcpath = os.path.join(path, file_)
-            pathtail = util.splitondir(srcdir, srcpath)
+            pathtail = os.path.relpath(srcpath, srcdir)
             linkpath = os.path.join(linkdir, pathtail)
             pathexist = os.path.dirname(linkpath)
             if not os.path.exists(pathexist):
