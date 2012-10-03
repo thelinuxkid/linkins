@@ -1,5 +1,23 @@
 import os
 
+from contextlib import contextmanager
+
+@contextmanager
+def remove_path(path):
+    try:
+        yield path
+    finally:
+        try:
+            os.remove(path)
+        except OSError, e:
+            # It's OK if the path is already gone
+            if not (
+                    e.errno == 2
+                    and
+                    e.strerror == 'No such file or directory'
+            ):
+                raise
+
 # Avoid name clash with os.path.abspath
 def abs_path(path):
     path = os.path.expanduser(path)
