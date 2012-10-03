@@ -1,5 +1,6 @@
 import os
 
+import mock
 import pytest
 import tempdirs
 
@@ -200,3 +201,66 @@ def test_make_nested_file_exists(srcdir, linkdir):
     assert os.path.islink(linkfile)
     with open(linkfile) as fp:
         assert fp.read() == 'source content'
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.link.log')
+def test_make_linkdir_has_file(srcdir, linkdir, fakelog):
+    srcfile = os.path.join(srcdir, 'foo')
+    linkfile = os.path.join(linkdir, 'foo')
+    with open(srcfile, 'w') as fp:
+        fp.write('source content')
+    with open(linkfile, 'w') as fp:
+        fp.write('existing content')
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+    )
+    debug = mock.call.debug(
+        '{linkfile} already exists'.format(
+            linkfile=linkfile,
+        ),
+    )
+    assert fakelog.mock_calls == [debug]
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.link.log')
+def test_make_linkdir_has_link(srcdir, linkdir, fakelog):
+    srcfile = os.path.join(srcdir, 'foo')
+    linkfile = os.path.join(linkdir, 'foo')
+    with open(srcfile, 'w') as fp:
+        fp.write('source content')
+    os.symlink(srcfile, linkfile)
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+    )
+    debug = mock.call.debug(
+        '{linkfile} already exists'.format(
+            linkfile=linkfile,
+        ),
+    )
+    assert fakelog.mock_calls == [debug]
+
+@tempdirs.makedirs(2)
+@mock.patch('os.symlink')
+def test_make_linkdir_oserror(srcdir, linkdir, fakesym):
+    srcfile = os.path.join(srcdir, 'foo')
+    linkfile = os.path.join(linkdir, 'foo')
+    with open(srcfile, 'w') as fp:
+        fp.write('source content')
+    error = OSError()
+    error.errno = 2
+    error.strerror = 'No such file or directory'
+    fakesym.side_effect = error
+    res = pytest.raises(
+        OSError,
+        link.make,
+        srcdir=srcdir,
+        linkdir=linkdir,
+        )
+    assert res.type == OSError
+    assert res.value.errno == 2
+    assert res.value.strerror == 'No such file or directory'
+
+    symlink = mock.call(srcfile, linkfile)
+    assert fakesym.mock_calls == [symlink]

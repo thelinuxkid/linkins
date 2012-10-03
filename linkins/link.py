@@ -1,6 +1,9 @@
 import os
+import logging
 
 from linkins import util
+
+log = logging.getLogger(__name__)
 
 def make(
         srcdir,
@@ -20,4 +23,14 @@ def make(
             pathexist = os.path.dirname(linkpath)
             if not os.path.exists(pathexist):
                 os.makedirs(pathexist)
-            os.symlink(srcpath, linkpath)
+            try:
+                os.symlink(srcpath, linkpath)
+            except OSError, e:
+                if e.errno == 17 and e.strerror == 'File exists':
+                    log.debug(
+                        '{linkpath} already exists'.format(
+                            linkpath=linkpath,
+                        )
+                    )
+                else:
+                    raise
