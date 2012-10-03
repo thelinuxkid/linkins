@@ -9,6 +9,12 @@ def make(
         srcdir,
         linkdir,
 ):
+    if not os.path.exists(srcdir):
+        raise ValueError(
+            'Target directory "{srcdir}" does not exist'.format(
+                srcdir=srcdir,
+            )
+        )
     if not os.path.exists(linkdir):
         raise ValueError(
             'Link directory "{linkdir}" does not exist'.format(

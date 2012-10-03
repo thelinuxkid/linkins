@@ -100,15 +100,27 @@ def test_make_many_files(srcdir, linkdir):
     with open(barlink) as fp:
         assert fp.read() == 'bar source content'
 
-def test_make_bad_target():
+@tempdirs.makedirs()
+def test_make_bad_linkdir(srcdir):
     res = pytest.raises(
         ValueError,
         link.make,
-        srcdir='',
+        srcdir=srcdir,
         linkdir='',
         )
     assert res.type == ValueError
     assert res.value.message == 'Link directory "" does not exist'
+
+@tempdirs.makedirs()
+def test_make_bad_srcdir(linkdir):
+    res = pytest.raises(
+        ValueError,
+        link.make,
+        srcdir='',
+        linkdir=linkdir,
+        )
+    assert res.type == ValueError
+    assert res.value.message == 'Target directory "" does not exist'
 
 @tempdirs.makedirs(2)
 def test_make_dir_exists(srcdir, linkdir):
