@@ -12,5 +12,4 @@ MAYDO
 =====
 
 - Warn if link exists.
-- Replace script file if it exists.
 - Recursively delete empty directories created in LINK_DIR.
