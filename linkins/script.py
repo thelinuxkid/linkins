@@ -1,3 +1,4 @@
+import os
 import logging
 import subprocess
 
@@ -15,9 +16,11 @@ def _logscript(fp, **kwargs):
         line = line.strip()
         log.info(line, extra=kwargs)
 
-def runscript(path, name):
+def runscript(path, *args):
+    name = os.path.basename(path)
+    cmd = [path] + list(args)
     proc = subprocess.Popen(
-        [path],
+        cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )

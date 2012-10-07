@@ -12,7 +12,7 @@ def test_runscript_simple(fakepopen, fakelog):
     err_manager.__iter__.return_value = ['foo stderr']
     out_manager = proc.stdout.__enter__.return_value
     out_manager.__iter__.return_value = ['foo stdout']
-    script.runscript('/foo/bar', 'bar')
+    script.runscript('/foo/bar')
 
     popen = util.mock_call_with_name(
         '',
@@ -69,3 +69,49 @@ def test_runscript_simple(fakepopen, fakelog):
         ]
     assert fakepopen.mock_calls == popen_calls
     assert fakelog.mock_calls == log_calls
+
+@mock.patch('linkins.script.log')
+@mock.patch('subprocess.Popen')
+def test_runscript_args(fakepopen, fakelog):
+    script.runscript('/foo/bar', 'fee', 'fo')
+    popen = util.mock_call_with_name(
+        '',
+        ['/foo/bar', 'fee', 'fo'],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        )
+    err_enter = util.mock_call_with_name(
+        '().stderr.__enter__',
+        )
+    err_iter_ = util.mock_call_with_name(
+        '().stderr.__enter__().__iter__',
+    )
+    err_exit = util.mock_call_with_name(
+        '().stderr.__exit__',
+        None,
+        None,
+        None,
+    )
+    out_enter = util.mock_call_with_name(
+        '().stdout.__enter__',
+        )
+    out_iter_ = util.mock_call_with_name(
+        '().stdout.__enter__().__iter__',
+    )
+    out_exit = util.mock_call_with_name(
+        '().stdout.__exit__',
+        None,
+        None,
+        None,
+    )
+    popen_calls = [
+        popen,
+        err_enter,
+        err_iter_,
+        err_exit,
+        out_enter,
+        out_iter_,
+        out_exit,
+    ]
+    assert fakepopen.mock_calls == popen_calls
+    assert fakelog.mock_calls == []
