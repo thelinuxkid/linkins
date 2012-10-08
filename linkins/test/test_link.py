@@ -45,6 +45,16 @@ def test_make_nested_dirs(srcdir, linkdir):
         assert fp.read() == 'source content'
 
 @tempdirs.makedirs(2)
+def test_make_nested_dirs_empty(srcdir, linkdir):
+    nesteddir = os.path.join(srcdir, 'foo', 'bar')
+    os.makedirs(nesteddir)
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+    )
+    assert os.listdir(linkdir) == []
+
+@tempdirs.makedirs(2)
 def test_make_many_dirs(srcdir, linkdir):
     nesteddir = os.path.join(srcdir, 'foo')
     os.makedirs(nesteddir)
@@ -387,6 +397,22 @@ def test_make_script_many_scripts(srcdir, linkdir, fakerun):
 @mock.patch('linkins.script.runscript')
 def test_make_script_no_run(srcdir, linkdir, fakerun):
     scriptfile = os.path.join(srcdir, 'foo-script')
+    with open(scriptfile, 'w') as fp:
+        fp.write('script content')
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        scriptname='foo-script',
+    )
+    assert fakerun.mock_calls == []
+    assert os.listdir(linkdir) == []
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.script.runscript')
+def test_make_script_no_run_nested(srcdir, linkdir, fakerun):
+    nesteddir = os.path.join(srcdir, 'foo', 'bar')
+    os.makedirs(nesteddir)
+    scriptfile = os.path.join(nesteddir, 'foo-script')
     with open(scriptfile, 'w') as fp:
         fp.write('script content')
     link.make(
