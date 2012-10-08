@@ -35,9 +35,22 @@ def parse_args():
         '-s',
         '--script',
         default='linkins-runnable',
+        type=str,
         help=(
-            'Name of the script(s) that can be executed at each level '
-            'of the target directory hierarchy (default: %(default)s)'
+            'Name of the script that can be executed at each level '
+            'of the target directory hierarchy. Scripts are never '
+            'linked (default: %(default)s)'
+            ),
+        )
+    parser.add_argument(
+        '-r',
+        '--run',
+        action='store_true',
+        default=False,
+        help=(
+            'Run the script (defined by --script) at each level of the '
+            'target directory hierarchy it is found (default: '
+            '%(default)s)'
             ),
         )
     args = parser.parse_args()
@@ -63,4 +76,5 @@ def main():
         srcdir=srcdir,
         linkdir=linkdir,
         scriptname=args.script,
+        runscript=args.run,
         )
