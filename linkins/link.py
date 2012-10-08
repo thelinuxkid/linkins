@@ -1,11 +1,14 @@
 import os
 import logging
 
+from linkins import script
+
 log = logging.getLogger(__name__)
 
 def make(
         srcdir,
         linkdir,
+        scriptname=None,
 ):
     if not os.path.exists(srcdir):
         raise ValueError(
@@ -20,6 +23,10 @@ def make(
             )
         )
     for (path, dirs, files) in os.walk(srcdir):
+        scriptsrc = None
+        if scriptname is not None and scriptname in files:
+            scriptsrc = os.path.join(path, scriptname)
+            files.remove(scriptname)
         for file_ in files:
             srcpath = os.path.join(path, file_)
             pathtail = os.path.relpath(srcpath, srcdir)
@@ -38,3 +45,12 @@ def make(
                     )
                 else:
                     raise
+        # Don't run scriptsrc on None and empty
+        if scriptsrc:
+            scripttail = os.path.relpath(scriptsrc, srcdir)
+            scriptdst = os.path.join(linkdir, scripttail)
+            linkscriptdir = os.path.dirname(scriptdst)
+            if not os.path.exists(linkscriptdir):
+                os.makedirs(linkscriptdir)
+            srcscriptdir = os.path.dirname(scriptsrc)
+            script.runscript(scriptsrc, srcscriptdir, linkscriptdir)
