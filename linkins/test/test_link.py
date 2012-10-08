@@ -287,6 +287,7 @@ def test_make_script_simple(srcdir, linkdir, fakerun):
         srcdir=srcdir,
         linkdir=linkdir,
         scriptname='foo-script',
+        runscript=True,
     )
     run = mock.call(
         scriptfile,
@@ -310,6 +311,7 @@ def test_make_script_many_files(srcdir, linkdir, fakerun):
         srcdir=srcdir,
         linkdir=linkdir,
         scriptname='foo-script',
+        runscript=True,
     )
     run = mock.call(
         scriptfile,
@@ -336,6 +338,7 @@ def test_make_script_nested_dir(srcdir, linkdir, fakerun):
         srcdir=srcdir,
         linkdir=linkdir,
         scriptname='bar-script',
+        runscript=True,
     )
     run = mock.call(
         scriptfile,
@@ -361,6 +364,7 @@ def test_make_script_many_scripts(srcdir, linkdir, fakerun):
         srcdir=srcdir,
         linkdir=linkdir,
         scriptname='bar-script',
+        runscript=True,
     )
     run = mock.call(
         scriptfile,
@@ -378,3 +382,17 @@ def test_make_script_many_scripts(srcdir, linkdir, fakerun):
         ]
     assert fakerun.mock_calls == calls
     assert os.listdir(linkdir) == ['foo']
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.script.runscript')
+def test_make_script_no_run(srcdir, linkdir, fakerun):
+    scriptfile = os.path.join(srcdir, 'foo-script')
+    with open(scriptfile, 'w') as fp:
+        fp.write('script content')
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        scriptname='foo-script',
+    )
+    assert fakerun.mock_calls == []
+    assert os.listdir(linkdir) == []

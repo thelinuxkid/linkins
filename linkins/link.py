@@ -9,6 +9,7 @@ def make(
         srcdir,
         linkdir,
         scriptname=None,
+        runscript=False,
 ):
     if not os.path.exists(srcdir):
         raise ValueError(
@@ -45,8 +46,8 @@ def make(
                     )
                 else:
                     raise
-        # Don't run scriptsrc on None and empty
-        if scriptsrc:
+        # Don't run scriptsrc if it's None or empty
+        if scriptsrc and runscript:
             scripttail = os.path.relpath(scriptsrc, srcdir)
             scriptdst = os.path.join(linkdir, scripttail)
             linkscriptdir = os.path.dirname(scriptdst)
