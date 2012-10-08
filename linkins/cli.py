@@ -53,6 +53,13 @@ def parse_args():
             '%(default)s)'
             ),
         )
+    parser.add_argument(
+        '-p',
+        '--replace',
+        action='store_true',
+        default=False,
+        help='Replace existing links (default: %(default)s)',
+        )
     args = parser.parse_args()
     return args
 
@@ -77,4 +84,5 @@ def main():
         linkdir=linkdir,
         scriptname=args.script,
         runscript=args.run,
+        replace=args.replace,
         )
