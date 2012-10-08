@@ -1,4 +1,5 @@
 import os
+import errno
 import logging
 
 from linkins import script
@@ -10,6 +11,7 @@ def make(
         linkdir,
         scriptname=None,
         runscript=False,
+        replace=False,
 ):
     if not os.path.exists(srcdir):
         raise ValueError(
@@ -35,17 +37,26 @@ def make(
             pathexist = os.path.dirname(linkpath)
             if not os.path.exists(pathexist):
                 os.makedirs(pathexist)
-            try:
-                os.symlink(srcpath, linkpath)
-            except OSError, e:
-                if e.errno == 17 and e.strerror == 'File exists':
+            if os.path.exists(linkpath):
+                if not replace:
                     log.error(
                         '{linkpath} already exists. Not linking.'.format(
                             linkpath=linkpath,
                         )
                     )
-                else:
-                    raise
+                    continue
+                log.debug(
+                    '{linkpath} already exists. Replacing.'.format(
+                        linkpath=linkpath,
+                    )
+                )
+                try:
+                    os.unlink(linkpath)
+                except OSError, e:
+                    # It's OK if the link disappeared
+                    if e.errno != errno.ENOENT:
+                        raise
+            os.symlink(srcpath, linkpath)
         # Don't run scriptsrc if it's None or empty
         if scriptsrc and runscript:
             scripttail = os.path.relpath(scriptsrc, srcdir)
