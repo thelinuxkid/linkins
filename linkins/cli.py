@@ -31,6 +31,15 @@ def parse_args():
         default=False,
         help='output DEBUG logging statements (default: %(default)s)',
         )
+    parser.add_argument(
+        '-s',
+        '--script',
+        default='linkins-runnable',
+        help=(
+            'Name of the script(s) that can be executed at each level '
+            'of the target directory hierarchy (default: %(default)s)'
+            ),
+        )
     args = parser.parse_args()
     return args
 
@@ -53,4 +62,5 @@ def main():
     link.make(
         srcdir=srcdir,
         linkdir=linkdir,
+        scriptname=args.script,
         )
