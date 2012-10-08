@@ -39,8 +39,8 @@ def make(
                 os.symlink(srcpath, linkpath)
             except OSError, e:
                 if e.errno == 17 and e.strerror == 'File exists':
-                    log.debug(
-                        '{linkpath} already exists'.format(
+                    log.error(
+                        '{linkpath} already exists. Not linking.'.format(
                             linkpath=linkpath,
                         )
                     )

@@ -67,7 +67,7 @@ def main():
     srcdir = util.abs_path(args.srcdir)
     linkdir = util.abs_path(args.linkdir)
     log.debug(
-        'Creating links from "{srcdir}" to "{linkdir}"'.format(
+        'Creating links from "{srcdir}" to "{linkdir}"...'.format(
             srcdir=srcdir,
             linkdir=linkdir,
         )

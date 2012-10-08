@@ -237,12 +237,12 @@ def test_make_linkdir_has_file(srcdir, linkdir, fakelog):
         srcdir=srcdir,
         linkdir=linkdir,
     )
-    debug = mock.call.debug(
-        '{linkfile} already exists'.format(
+    error = mock.call.error(
+        '{linkfile} already exists. Not linking.'.format(
             linkfile=linkfile,
         ),
     )
-    assert fakelog.mock_calls == [debug]
+    assert fakelog.mock_calls == [error]
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
@@ -256,12 +256,12 @@ def test_make_linkdir_has_link(srcdir, linkdir, fakelog):
         srcdir=srcdir,
         linkdir=linkdir,
     )
-    debug = mock.call.debug(
-        '{linkfile} already exists'.format(
+    error = mock.call.error(
+        '{linkfile} already exists. Not linking.'.format(
             linkfile=linkfile,
         ),
     )
-    assert fakelog.mock_calls == [debug]
+    assert fakelog.mock_calls == [error]
 
 @tempdirs.makedirs(2)
 @mock.patch('os.symlink')
