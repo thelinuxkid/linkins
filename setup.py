@@ -5,7 +5,7 @@ EXTRAS_REQUIRES = dict(
     test=[
         'pytest>=2.2.4',
         'mock>=0.8.0',
-        'tempdirs>=0.0.2',
+        'tempdirs>=0.0.3',
         ],
     dev=[
         'ipython>=0.13',
