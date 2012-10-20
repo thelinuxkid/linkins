@@ -33,7 +33,7 @@ setup(
     author_email='andres@thelinuxkid.com',
     maintainer='Andres Buritica',
     maintainer_email='andres@thelinuxkid.com',
-    url='https://github.com/andresburitica/linkins',
+    url='https://github.com/thelinuxkid/linkins',
     packages = find_packages(),
     test_suite='nose.collector',
     install_requires=[
