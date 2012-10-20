@@ -122,4 +122,4 @@ Testing
 To run the unit-tests run the following command from the project's
 base directory::
 
-    .virtual/bin/nosetests
+    .virtual/bin/py.test
