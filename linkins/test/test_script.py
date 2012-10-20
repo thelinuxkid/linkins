@@ -73,10 +73,10 @@ def test_runscript_simple(fakepopen, fakelog):
 @mock.patch('linkins.script.log')
 @mock.patch('subprocess.Popen')
 def test_runscript_args(fakepopen, fakelog):
-    script.runscript('/foo/bar', 'fee', 'fo')
+    script.runscript('/foo/bar', 'fee', 'fi', 'fo')
     popen = util.mock_call_with_name(
         '',
-        ['/foo/bar', 'fee', 'fo'],
+        ['/foo/bar', 'fee', 'fi', 'fo'],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         )

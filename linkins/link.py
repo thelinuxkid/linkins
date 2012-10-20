@@ -59,10 +59,9 @@ def make(
             os.symlink(srcpath, linkpath)
         # Don't run scriptsrc if it's None or empty
         if scriptsrc and runscript:
-            scripttail = os.path.relpath(scriptsrc, srcdir)
+            scriptdir = os.path.dirname(scriptsrc)
+            scripttail = os.path.relpath(scriptdir, srcdir)
             scriptdst = os.path.join(linkdir, scripttail)
-            linkscriptdir = os.path.dirname(scriptdst)
-            if not os.path.exists(linkscriptdir):
-                os.makedirs(linkscriptdir)
-            srcscriptdir = os.path.dirname(scriptsrc)
-            script.runscript(scriptsrc, srcscriptdir, linkscriptdir)
+            if not os.path.exists(scriptdst):
+                os.makedirs(scriptdst)
+            script.runscript(scriptsrc, srcdir, linkdir, scripttail)

@@ -439,6 +439,7 @@ def test_make_script_simple(srcdir, linkdir, fakerun):
         scriptfile,
         srcdir,
         linkdir,
+        '.',
         )
     assert fakerun.mock_calls == [run]
     assert os.listdir(linkdir) == []
@@ -463,6 +464,7 @@ def test_make_script_many_files(srcdir, linkdir, fakerun):
         scriptfile,
         srcdir,
         linkdir,
+        '.',
         )
     assert fakerun.mock_calls == [run]
     assert os.listdir(linkdir) == ['foo']
@@ -475,7 +477,6 @@ def test_make_script_many_files(srcdir, linkdir, fakerun):
 @mock.patch('linkins.script.runscript')
 def test_make_script_nested_dir(srcdir, linkdir, fakerun):
     srcnesteddir = os.path.join(srcdir, 'foo')
-    linknesteddir = os.path.join(linkdir, 'foo')
     os.makedirs(srcnesteddir)
     scriptfile = os.path.join(srcnesteddir, 'bar-script')
     with open(scriptfile, 'w') as fp:
@@ -488,8 +489,9 @@ def test_make_script_nested_dir(srcdir, linkdir, fakerun):
     )
     run = mock.call(
         scriptfile,
-        srcnesteddir,
-        linknesteddir,
+        srcdir,
+        linkdir,
+        'foo',
         )
     assert fakerun.mock_calls == [run]
     assert os.listdir(linkdir) == ['foo']
@@ -498,7 +500,6 @@ def test_make_script_nested_dir(srcdir, linkdir, fakerun):
 @mock.patch('linkins.script.runscript')
 def test_make_script_many_scripts(srcdir, linkdir, fakerun):
     srcnesteddir = os.path.join(srcdir, 'foo')
-    linknesteddir = os.path.join(linkdir, 'foo')
     os.makedirs(srcnesteddir)
     scriptfile = os.path.join(srcdir, 'bar-script')
     scriptnested = os.path.join(srcnesteddir, 'bar-script')
@@ -516,11 +517,13 @@ def test_make_script_many_scripts(srcdir, linkdir, fakerun):
         scriptfile,
         srcdir,
         linkdir,
+        '.',
         )
     runnested = mock.call(
         scriptnested,
-        srcnesteddir,
-        linknesteddir,
+        srcdir,
+        linkdir,
+        'foo',
         )
     calls = [
         run,
