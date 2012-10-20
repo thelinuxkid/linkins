@@ -28,7 +28,6 @@ setup(
         "user-defined scripts at each level of the directory hierarchy "
         "and a safe way to backup existing files or directories."
         ),
-    license='GPL',
     author='Andres Buritica',
     author_email='andres@thelinuxkid.com',
     maintainer='Andres Buritica',
@@ -45,4 +44,12 @@ setup(
             'linkins = linkins.cli:main',
             ],
         },
-    )
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
+        'Natural Language :: English',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7'
+    ],
+)
