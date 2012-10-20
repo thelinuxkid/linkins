@@ -1,5 +1,6 @@
 #!/usr/bin/python
 from setuptools import setup, find_packages
+import os
 
 EXTRAS_REQUIRES = dict(
     test=[
@@ -18,21 +19,23 @@ for k,v in EXTRAS_REQUIRES.iteritems():
         continue
     EXTRAS_REQUIRES['test'] += v
 
+# Pypi package documentation
+root = os.path.dirname(__file__)
+path = os.path.join(root, 'README.rst')
+with open(path) as fp:
+    long_description = fp.read()
+
 setup(
     name='linkins',
     version='0.0.3',
     description='linkins -- Safely link directory structures',
-    long_description=(
-        "linkins is a command line tool which allows users to link a "
-        "directory structure. It provides the ability to execute "
-        "user-defined scripts at each level of the directory hierarchy "
-        "and a safe way to backup existing files or directories."
-        ),
+    long_description=long_description,
     author='Andres Buritica',
     author_email='andres@thelinuxkid.com',
     maintainer='Andres Buritica',
     maintainer_email='andres@thelinuxkid.com',
     url='https://github.com/thelinuxkid/linkins',
+    license='MIT',
     packages = find_packages(),
     test_suite='nose.collector',
     install_requires=[
