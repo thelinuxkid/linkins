@@ -20,7 +20,7 @@ for k,v in EXTRAS_REQUIRES.iteritems():
 
 setup(
     name='linkins',
-    version='0.0.1',
+    version='0.0.2',
     description='linkins -- Safely link directory structures',
     long_description=(
         "linkins is a command line tool which allows users to link a "
