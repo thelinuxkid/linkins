@@ -34,7 +34,7 @@ def parse_args():
     parser.add_argument(
         '-s',
         '--script',
-        default='linkins-runnable',
+        default='linkins-script',
         type=str,
         help=(
             'Name of the script that can be executed at each level '
