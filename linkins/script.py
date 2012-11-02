@@ -1,6 +1,7 @@
 import os
 import logging
 import subprocess
+import multiprocessing
 
 log = logging.getLogger(__name__)
 log.propagate = False
@@ -16,10 +17,7 @@ def _logscript(fp, **kwargs):
         line = line.strip()
         log.info(line, extra=kwargs)
 
-def runscript(path, *args, **kwargs):
-    name = os.path.basename(path)
-    name = kwargs.get('name', name)
-    cmd = [path] + list(args)
+def _run(cmd, name):
     proc = subprocess.Popen(
         cmd,
         stdout=subprocess.PIPE,
@@ -37,3 +35,17 @@ def runscript(path, *args, **kwargs):
             script=name,
             stream='STDOUT',
         )
+
+def runscript(path, *args, **kwargs):
+    multi = kwargs.get('multiprocess', False)
+    name = os.path.basename(path)
+    name = kwargs.get('name', name)
+    cmd = [path] + list(args)
+    if multi:
+        proc = multiprocessing.Process(
+            target=_run,
+            args=(cmd, name),
+        )
+        proc.start()
+        return
+    _run(cmd, name)

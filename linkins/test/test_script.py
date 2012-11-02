@@ -4,9 +4,10 @@ import subprocess
 from linkins import script
 from linkins.test import util
 
+@mock.patch('multiprocessing.Process')
 @mock.patch('linkins.script.log')
 @mock.patch('subprocess.Popen')
-def test_runscript_simple(fakepopen, fakelog):
+def test_runscript_simple(fakepopen, fakelog, fakeprocess):
     proc = fakepopen.return_value
     err_manager = proc.stderr.__enter__.return_value
     err_manager.__iter__.return_value = ['foo stderr']
@@ -69,10 +70,12 @@ def test_runscript_simple(fakepopen, fakelog):
         ]
     assert fakepopen.mock_calls == popen_calls
     assert fakelog.mock_calls == log_calls
+    assert fakeprocess.mock_calls == []
 
+@mock.patch('multiprocessing.Process')
 @mock.patch('linkins.script.log')
 @mock.patch('subprocess.Popen')
-def test_runscript_args(fakepopen, fakelog):
+def test_runscript_args(fakepopen, fakelog, fakeprocess):
     script.runscript('/foo/bar', 'fee', 'fi', 'fo')
     popen = util.mock_call_with_name(
         '',
@@ -115,10 +118,12 @@ def test_runscript_args(fakepopen, fakelog):
     ]
     assert fakepopen.mock_calls == popen_calls
     assert fakelog.mock_calls == []
+    assert fakeprocess.mock_calls == []
 
+@mock.patch('multiprocessing.Process')
 @mock.patch('linkins.script.log')
 @mock.patch('subprocess.Popen')
-def test_runscript_name(fakepopen, fakelog):
+def test_runscript_name(fakepopen, fakelog, fakeprocess):
     proc = fakepopen.return_value
     err_manager = proc.stderr.__enter__.return_value
     err_manager.__iter__.return_value = ['foo stderr']
@@ -181,3 +186,22 @@ def test_runscript_name(fakepopen, fakelog):
         ]
     assert fakepopen.mock_calls == popen_calls
     assert fakelog.mock_calls == log_calls
+    assert fakeprocess.mock_calls == []
+
+@mock.patch('multiprocessing.Process')
+@mock.patch('linkins.script.log')
+@mock.patch('subprocess.Popen')
+def test_runscript_multiprocess(fakepopen, fakelog, fakeprocess):
+    script.runscript('/foo/bar', multiprocess=True)
+    assert fakepopen.mock_calls == []
+    assert fakelog.mock_calls == []
+    process = mock.call(
+        target=script._run,
+        args=(['/foo/bar'], 'bar'),
+        )
+    start = mock.call().start()
+    calls = [
+        process,
+        start,
+        ]
+    assert fakeprocess.mock_calls == calls
