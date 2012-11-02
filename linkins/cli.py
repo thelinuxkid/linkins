@@ -25,13 +25,6 @@ def parse_args():
         help='the path to the directory where the links are to be created',
     )
     parser.add_argument(
-        '-v',
-        '--verbose',
-        action='store_true',
-        default=False,
-        help='output DEBUG logging statements (default: %(default)s)',
-        )
-    parser.add_argument(
         '-s',
         '--script',
         default='linkins-script',
@@ -60,13 +53,37 @@ def parse_args():
         default=False,
         help='Replace existing links (default: %(default)s)',
         )
+    loggroup = parser.add_mutually_exclusive_group()
+    loggroup.add_argument(
+        '-v',
+        '--verbose',
+        action='store_true',
+        default=False,
+        help='Output DEBUG logging statements (default: %(default)s)',
+        )
+    loggroup.add_argument(
+        '-q',
+        '--quiet',
+        action='store_true',
+        default=False,
+        help=(
+            'Only output ERROR and FATAL logging statements '
+            '(default: %(default)s)'
+        )
+    )
     args = parser.parse_args()
     return args
 
 def main():
     args = parse_args()
+    level = logging.INFO
+    # Only one of verbose and quiet will be set
+    if args.verbose:
+        level = logging.DEBUG
+    if args.quiet:
+        level = logging.ERROR
     logging.basicConfig(
-        level=logging.DEBUG if args.verbose else logging.INFO,
+        level=level,
         format='%(asctime)s.%(msecs)03d %(name)s: %(levelname)s: %(message)s',
         datefmt='%Y-%m-%dT%H:%M:%S',
         )
