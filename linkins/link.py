@@ -67,6 +67,11 @@ def make(
             name = os.path.join(scripttail, name)
             if not os.path.exists(scriptdst):
                 os.makedirs(scriptdst)
+            log.debug(
+                'Running script {name}'.format(
+                    name=name,
+                )
+            )
             script.runscript(
                 scriptsrc,
                 srcdir,
