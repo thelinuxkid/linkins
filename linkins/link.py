@@ -62,6 +62,14 @@ def make(
             scriptdir = os.path.dirname(scriptsrc)
             scripttail = os.path.relpath(scriptdir, srcdir)
             scriptdst = os.path.join(linkdir, scripttail)
+            name = os.path.basename(scriptsrc)
+            name = os.path.join(scripttail, name)
             if not os.path.exists(scriptdst):
                 os.makedirs(scriptdst)
-            script.runscript(scriptsrc, srcdir, linkdir, scripttail)
+            script.runscript(
+                scriptsrc,
+                srcdir,
+                linkdir,
+                scripttail,
+                name=name,
+            )

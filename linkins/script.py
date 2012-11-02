@@ -16,8 +16,9 @@ def _logscript(fp, **kwargs):
         line = line.strip()
         log.info(line, extra=kwargs)
 
-def runscript(path, *args):
+def runscript(path, *args, **kwargs):
     name = os.path.basename(path)
+    name = kwargs.get('name', name)
     cmd = [path] + list(args)
     proc = subprocess.Popen(
         cmd,
