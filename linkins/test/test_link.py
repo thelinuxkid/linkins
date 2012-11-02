@@ -238,7 +238,7 @@ def test_make_linkdir_has_file(srcdir, linkdir, fakelog):
         srcdir=srcdir,
         linkdir=linkdir,
     )
-    error = mock.call.error(
+    error = mock.call.warn(
         '{linkfile} already exists. Not linking.'.format(
             linkfile=linkfile,
         ),
@@ -257,7 +257,7 @@ def test_make_linkdir_has_link(srcdir, linkdir, fakelog):
         srcdir=srcdir,
         linkdir=linkdir,
     )
-    error = mock.call.error(
+    error = mock.call.warn(
         '{linkfile} already exists. Not linking.'.format(
             linkfile=linkfile,
         ),
