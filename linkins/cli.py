@@ -91,8 +91,7 @@ def main():
         level = logging.ERROR
     logging.basicConfig(
         level=level,
-        format='%(asctime)s.%(msecs)03d %(name)s: %(levelname)s: %(message)s',
-        datefmt='%Y-%m-%dT%H:%M:%S',
+        format='%(name)s: %(levelname)s: %(message)s',
         )
 
     srcdir = util.abs_path(args.srcdir)

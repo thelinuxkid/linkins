@@ -8,7 +8,7 @@ log.propagate = False
 handler = logging.StreamHandler()
 fmt = logging.Formatter(
     fmt='%(script)s: %(stream)s: %(message)s',
-    )
+)
 handler.setFormatter(fmt)
 log.addHandler(handler)
 

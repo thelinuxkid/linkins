@@ -91,7 +91,16 @@ be able to obtain the dpkg lock.
 Output
 ------
 
-TODO
+A script's output is redirected to linkins' log and is logged at level
+INFO. A script log line has the following form::
+
+    SCRIPT: STREAM: MSG
+
+where SCRIPT is the relative path from TARGET_DIR to the script,
+STREAM is one of STDOUT or STDERR (depending on the stream the script
+outputted to) and MSG is the message outputted by the script.
+
+If the -q option is used the script's output will be not be shown.
 
 Developing
 ==========
