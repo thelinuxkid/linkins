@@ -441,6 +441,7 @@ def test_make_script_simple(srcdir, linkdir, fakerun):
         linkdir,
         '.',
         name='./foo-script',
+        multiprocess=False,
         )
     assert fakerun.mock_calls == [run]
     assert os.listdir(linkdir) == []
@@ -467,6 +468,7 @@ def test_make_script_many_files(srcdir, linkdir, fakerun):
         linkdir,
         '.',
         name='./foo-script',
+        multiprocess=False,
         )
     assert fakerun.mock_calls == [run]
     assert os.listdir(linkdir) == ['foo']
@@ -495,6 +497,7 @@ def test_make_script_nested_dir(srcdir, linkdir, fakerun):
         linkdir,
         'foo',
         name='foo/bar-script',
+        multiprocess=False,
         )
     assert fakerun.mock_calls == [run]
     assert os.listdir(linkdir) == ['foo']
@@ -522,6 +525,7 @@ def test_make_script_many_scripts(srcdir, linkdir, fakerun):
         linkdir,
         '.',
         name='./bar-script',
+        multiprocess=False,
         )
     runnested = mock.call(
         scriptnested,
@@ -529,6 +533,7 @@ def test_make_script_many_scripts(srcdir, linkdir, fakerun):
         linkdir,
         'foo',
         name='foo/bar-script',
+        multiprocess=False,
         )
     calls = [
         run,
@@ -565,4 +570,28 @@ def test_make_script_no_run_nested(srcdir, linkdir, fakerun):
         scriptname='foo-script',
     )
     assert fakerun.mock_calls == []
+    assert os.listdir(linkdir) == []
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.script.runscript')
+def test_make_script_multiprocess(srcdir, linkdir, fakerun):
+    scriptfile = os.path.join(srcdir, 'foo-script')
+    with open(scriptfile, 'w') as fp:
+        fp.write('script content')
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        scriptname='foo-script',
+        runscript=True,
+        multiprocess=True,
+    )
+    run = mock.call(
+        scriptfile,
+        srcdir,
+        linkdir,
+        '.',
+        name='./foo-script',
+        multiprocess=True,
+        )
+    assert fakerun.mock_calls == [run]
     assert os.listdir(linkdir) == []

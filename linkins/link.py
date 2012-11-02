@@ -12,6 +12,7 @@ def make(
         scriptname=None,
         runscript=False,
         replace=False,
+        multiprocess=False,
 ):
     if not os.path.exists(srcdir):
         raise ValueError(
@@ -72,4 +73,5 @@ def make(
                 linkdir,
                 scripttail,
                 name=name,
+                multiprocess=multiprocess,
             )

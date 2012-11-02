@@ -53,6 +53,13 @@ def parse_args():
         default=False,
         help='Replace existing links (default: %(default)s)',
         )
+    parser.add_argument(
+        '-m',
+        '--multiprocess',
+        action='store_true',
+        default=False,
+        help='Run scripts as subprocesses (default: %(default)s)',
+        )
     loggroup = parser.add_mutually_exclusive_group()
     loggroup.add_argument(
         '-v',
@@ -102,4 +109,5 @@ def main():
         scriptname=args.script,
         runscript=args.run,
         replace=args.replace,
+        multiprocess=args.multiprocess,
         )

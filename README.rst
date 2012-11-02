@@ -76,6 +76,18 @@ called like::
 If the directory which mirrors the script's parent directory in the
 LINK_DIR side does not exist linkdirs will create it.
 
+Any files in the same directory as the script are always linked before
+the script is run.
+
+Multiprocessing
+---------------
+
+You can run each script as a separate process by using the -m
+or --multiprocess option. However, you must be aware of the
+consequences. For example, if you have two scripts that install
+packages from apt-get one of them will likely fail because it will not
+be able to obtain the dpkg lock.
+
 Output
 ------
 
