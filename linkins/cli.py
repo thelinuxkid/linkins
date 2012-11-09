@@ -16,13 +16,13 @@ def parse_args():
         'srcdir',
         metavar='TARGET_DIR',
         type=str,
-        help='the path to the directory structure to be linked',
+        help='path to the directory structure to be linked',
     )
     parser.add_argument(
         'linkdir',
         metavar='LINK_DIR',
         type=str,
-        help='the path to the directory where the links are to be created',
+        help='path to the directory where the links are to be created',
     )
     parser.add_argument(
         '-s',
@@ -30,7 +30,7 @@ def parse_args():
         default='linkins-script',
         type=str,
         help=(
-            'Name of the script that can be executed at each level '
+            'name of the script that can be executed at each level '
             'of the target directory hierarchy. Scripts are never '
             'linked (default: %(default)s)'
             ),
@@ -41,7 +41,7 @@ def parse_args():
         action='store_true',
         default=False,
         help=(
-            'Run the script (defined by --script) at each level of the '
+            'run the script (defined by --script) at each level of the '
             'target directory hierarchy it is found (default: '
             '%(default)s)'
             ),
@@ -51,14 +51,14 @@ def parse_args():
         '--replace',
         action='store_true',
         default=False,
-        help='Replace existing links (default: %(default)s)',
+        help='replace existing links (default: %(default)s)',
         )
     parser.add_argument(
         '-m',
         '--multiprocess',
         action='store_true',
         default=False,
-        help='Run scripts as subprocesses (default: %(default)s)',
+        help='run scripts as subprocesses (default: %(default)s)',
         )
     loggroup = parser.add_mutually_exclusive_group()
     loggroup.add_argument(
@@ -66,7 +66,7 @@ def parse_args():
         '--verbose',
         action='store_true',
         default=False,
-        help='Output DEBUG logging statements (default: %(default)s)',
+        help='output DEBUG logging statements (default: %(default)s)',
         )
     loggroup.add_argument(
         '-q',
@@ -74,7 +74,7 @@ def parse_args():
         action='store_true',
         default=False,
         help=(
-            'Only output ERROR and FATAL logging statements '
+            'only output ERROR and FATAL logging statements '
             '(default: %(default)s)'
         )
     )
