@@ -8,7 +8,8 @@ import tempdirs
 from linkins import link
 
 @tempdirs.makedirs(2)
-def test_make_simple(srcdir, linkdir):
+def test_make_simple(**kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     srcfile = os.path.join(srcdir, 'foo')
     linkfile = os.path.join(linkdir, 'foo')
     with open(srcfile, 'w') as fp:
@@ -24,7 +25,8 @@ def test_make_simple(srcdir, linkdir):
         assert fp.read() == 'source content'
 
 @tempdirs.makedirs(2)
-def test_make_nested_dirs(srcdir, linkdir):
+def test_make_nested_dirs(**kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     nesteddir = os.path.join(srcdir, 'foo', 'bar')
     os.makedirs(nesteddir)
     srcfile = os.path.join(srcdir, 'foo', 'bar', 'fee')
@@ -46,7 +48,8 @@ def test_make_nested_dirs(srcdir, linkdir):
         assert fp.read() == 'source content'
 
 @tempdirs.makedirs(2)
-def test_make_nested_dirs_empty(srcdir, linkdir):
+def test_make_nested_dirs_empty(**kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     nesteddir = os.path.join(srcdir, 'foo', 'bar')
     os.makedirs(nesteddir)
     link.make(
@@ -56,7 +59,8 @@ def test_make_nested_dirs_empty(srcdir, linkdir):
     assert os.listdir(linkdir) == []
 
 @tempdirs.makedirs(2)
-def test_make_many_dirs(srcdir, linkdir):
+def test_make_many_dirs(**kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     nesteddir = os.path.join(srcdir, 'foo')
     os.makedirs(nesteddir)
     nesteddir = os.path.join(srcdir, 'fee')
@@ -88,7 +92,8 @@ def test_make_many_dirs(srcdir, linkdir):
         assert fp.read() == 'fo source content'
 
 @tempdirs.makedirs(2)
-def test_make_many_files(srcdir, linkdir):
+def test_make_many_files(**kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     foosrc = os.path.join(srcdir, 'foo')
     barsrc = os.path.join(srcdir, 'bar')
     foolink = os.path.join(linkdir, 'foo')
@@ -112,7 +117,8 @@ def test_make_many_files(srcdir, linkdir):
         assert fp.read() == 'bar source content'
 
 @tempdirs.makedirs()
-def test_make_bad_linkdir(srcdir):
+def test_make_bad_linkdir(**kwargs):
+    (srcdir,) = kwargs['tempdirs_dirs']
     res = pytest.raises(
         ValueError,
         link.make,
@@ -123,7 +129,8 @@ def test_make_bad_linkdir(srcdir):
     assert res.value.message == 'Link directory "" does not exist'
 
 @tempdirs.makedirs()
-def test_make_bad_srcdir(linkdir):
+def test_make_bad_srcdir(**kwargs):
+    (linkdir,) = kwargs['tempdirs_dirs']
     res = pytest.raises(
         ValueError,
         link.make,
@@ -134,7 +141,8 @@ def test_make_bad_srcdir(linkdir):
     assert res.value.message == 'Target directory "" does not exist'
 
 @tempdirs.makedirs(2)
-def test_make_dir_exists(srcdir, linkdir):
+def test_make_dir_exists(**kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     srcfile = os.path.join(srcdir, 'foo')
     linkfile = os.path.join(linkdir, 'foo')
     olddir = os.path.join(linkdir, 'fee')
@@ -153,7 +161,8 @@ def test_make_dir_exists(srcdir, linkdir):
         assert fp.read() == 'source content'
 
 @tempdirs.makedirs(2)
-def test_make_file_exists(srcdir, linkdir):
+def test_make_file_exists(**kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     srcfile = os.path.join(srcdir, 'foo')
     linkfile = os.path.join(linkdir, 'foo')
     oldfile = os.path.join(linkdir, 'fee')
@@ -175,7 +184,8 @@ def test_make_file_exists(srcdir, linkdir):
         assert fp.read() == 'source content'
 
 @tempdirs.makedirs(2)
-def test_make_nested_dir_exists(srcdir, linkdir):
+def test_make_nested_dir_exists(**kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     nesteddir = os.path.join(srcdir, 'foo')
     os.makedirs(nesteddir)
     srcfile = os.path.join(srcdir, 'foo', 'fee')
@@ -198,7 +208,8 @@ def test_make_nested_dir_exists(srcdir, linkdir):
         assert fp.read() == 'source content'
 
 @tempdirs.makedirs(2)
-def test_make_nested_file_exists(srcdir, linkdir):
+def test_make_nested_file_exists(**kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     nesteddir = os.path.join(srcdir, 'foo')
     os.makedirs(nesteddir)
     srcfile = os.path.join(srcdir, 'foo', 'fee')
@@ -227,7 +238,8 @@ def test_make_nested_file_exists(srcdir, linkdir):
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
-def test_make_linkdir_has_file(srcdir, linkdir, fakelog):
+def test_make_linkdir_has_file(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     srcfile = os.path.join(srcdir, 'foo')
     linkfile = os.path.join(linkdir, 'foo')
     with open(srcfile, 'w') as fp:
@@ -247,7 +259,8 @@ def test_make_linkdir_has_file(srcdir, linkdir, fakelog):
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
-def test_make_linkdir_has_link(srcdir, linkdir, fakelog):
+def test_make_linkdir_has_link(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     srcfile = os.path.join(srcdir, 'foo')
     linkfile = os.path.join(linkdir, 'foo')
     with open(srcfile, 'w') as fp:
@@ -266,7 +279,8 @@ def test_make_linkdir_has_link(srcdir, linkdir, fakelog):
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
-def test_make_linkdir_replace_file(srcdir, linkdir, fakelog):
+def test_make_linkdir_replace_file(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     srcfile = os.path.join(srcdir, 'foo')
     linkfile = os.path.join(linkdir, 'foo')
     with open(srcfile, 'w') as fp:
@@ -292,7 +306,8 @@ def test_make_linkdir_replace_file(srcdir, linkdir, fakelog):
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
-def test_make_linkdir_replace_same_link(srcdir, linkdir, fakelog):
+def test_make_linkdir_replace_same_link(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     srcfile = os.path.join(srcdir, 'foo')
     linkfile = os.path.join(linkdir, 'foo')
     with open(srcfile, 'w') as fp:
@@ -318,11 +333,10 @@ def test_make_linkdir_replace_same_link(srcdir, linkdir, fakelog):
 @tempdirs.makedirs(3)
 @mock.patch('linkins.link.log')
 def test_make_linkdir_replace_different_link(
-        srcdir,
-        linkdir,
-        diffdir,
         fakelog,
+        **kwargs
 ):
+    (srcdir, linkdir, diffdir) = kwargs['tempdirs_dirs']
     srcfile = os.path.join(srcdir, 'foo')
     linkfile = os.path.join(linkdir, 'foo')
     difffile = os.path.join(diffdir, 'foo')
@@ -352,11 +366,11 @@ def test_make_linkdir_replace_different_link(
 @mock.patch('linkins.link.log')
 @mock.patch('os.unlink')
 def test_make_linkdir_unlink_oserror(
-        srcdir,
-        linkdir,
         fakeunlink,
         fakelog,
+        **kwargs
 ):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     srcfile = os.path.join(srcdir, 'foo')
     linkfile = os.path.join(linkdir, 'foo')
     with open(srcfile, 'w') as fp:
@@ -387,11 +401,11 @@ def test_make_linkdir_unlink_oserror(
 @mock.patch('linkins.link.log')
 @mock.patch('os.unlink')
 def test_make_linkdir_unlink_oserror_enoent(
-        srcdir,
-        linkdir,
         fakeunlink,
         fakelog,
+        **kwargs
 ):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     srcfile = os.path.join(srcdir, 'foo')
     linkfile = os.path.join(linkdir, 'foo')
     with open(srcfile, 'w') as fp:
@@ -425,7 +439,8 @@ def test_make_linkdir_unlink_oserror_enoent(
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.script.runscript')
-def test_make_script_simple(srcdir, linkdir, fakerun):
+def test_make_script_simple(fakerun, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     scriptfile = os.path.join(srcdir, 'foo-script')
     with open(scriptfile, 'w') as fp:
         fp.write('script content')
@@ -448,7 +463,8 @@ def test_make_script_simple(srcdir, linkdir, fakerun):
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.script.runscript')
-def test_make_script_many_files(srcdir, linkdir, fakerun):
+def test_make_script_many_files(fakerun, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     srcfile = os.path.join(srcdir, 'foo')
     linkfile = os.path.join(linkdir, 'foo')
     scriptfile = os.path.join(srcdir, 'foo-script')
@@ -479,7 +495,8 @@ def test_make_script_many_files(srcdir, linkdir, fakerun):
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.script.runscript')
-def test_make_script_nested_dir(srcdir, linkdir, fakerun):
+def test_make_script_nested_dir(fakerun, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     srcnesteddir = os.path.join(srcdir, 'foo')
     os.makedirs(srcnesteddir)
     scriptfile = os.path.join(srcnesteddir, 'bar-script')
@@ -504,7 +521,8 @@ def test_make_script_nested_dir(srcdir, linkdir, fakerun):
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.script.runscript')
-def test_make_script_many_scripts(srcdir, linkdir, fakerun):
+def test_make_script_many_scripts(fakerun, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     srcnesteddir = os.path.join(srcdir, 'foo')
     os.makedirs(srcnesteddir)
     scriptfile = os.path.join(srcdir, 'bar-script')
@@ -544,7 +562,8 @@ def test_make_script_many_scripts(srcdir, linkdir, fakerun):
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.script.runscript')
-def test_make_script_no_run(srcdir, linkdir, fakerun):
+def test_make_script_no_run(fakerun, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     scriptfile = os.path.join(srcdir, 'foo-script')
     with open(scriptfile, 'w') as fp:
         fp.write('script content')
@@ -558,7 +577,8 @@ def test_make_script_no_run(srcdir, linkdir, fakerun):
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.script.runscript')
-def test_make_script_no_run_nested(srcdir, linkdir, fakerun):
+def test_make_script_no_run_nested(fakerun, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     nesteddir = os.path.join(srcdir, 'foo', 'bar')
     os.makedirs(nesteddir)
     scriptfile = os.path.join(nesteddir, 'foo-script')
@@ -574,7 +594,8 @@ def test_make_script_no_run_nested(srcdir, linkdir, fakerun):
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.script.runscript')
-def test_make_script_multiprocess(srcdir, linkdir, fakerun):
+def test_make_script_multiprocess(fakerun, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
     scriptfile = os.path.join(srcdir, 'foo-script')
     with open(scriptfile, 'w') as fp:
         fp.write('script content')
