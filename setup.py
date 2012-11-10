@@ -27,7 +27,7 @@ with open(path) as fp:
 
 setup(
     name='linkins',
-    version='0.0.6',
+    version='0.0.6.1',
     description='linkins -- Safely link directory structures',
     long_description=long_description,
     author='Andres Buritica',
