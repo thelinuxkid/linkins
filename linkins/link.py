@@ -38,7 +38,7 @@ def make(
             pathexist = os.path.dirname(linkpath)
             if not os.path.exists(pathexist):
                 os.makedirs(pathexist)
-            if os.path.exists(linkpath):
+            if os.path.lexists(linkpath):
                 if not replace:
                     log.warn(
                         '{linkpath} already exists. Not linking.'.format(
