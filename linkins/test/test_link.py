@@ -616,3 +616,174 @@ def test_make_script_multiprocess(fakerun, **kwargs):
         )
     assert fakerun.mock_calls == [run]
     assert os.listdir(linkdir) == []
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.link.log')
+def test_make_linkdir_clean_file(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
+    srcfile = os.path.join(srcdir, 'foo')
+    linkfile = os.path.join(linkdir, 'foo')
+    with open(srcfile, 'w') as fp:
+        fp.write('source content')
+    with open(linkfile, 'w') as fp:
+        fp.write('existing content')
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        clean=True,
+    )
+    debug = mock.call.debug(
+        '{linkfile} exists. Removing.'.format(
+            linkfile=linkfile,
+        ),
+    )
+    assert fakelog.mock_calls == [debug]
+    assert os.listdir(linkdir) == []
+    assert os.path.isfile(srcfile)
+    assert not os.path.exists(linkfile)
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.link.log')
+def test_make_linkdir_clean_link(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
+    srcfile = os.path.join(srcdir, 'foo')
+    linkfile = os.path.join(linkdir, 'foo')
+    with open(srcfile, 'w') as fp:
+        fp.write('source content')
+    os.symlink(srcfile, linkfile)
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        clean=True,
+    )
+    debug = mock.call.debug(
+        '{linkfile} exists. Removing.'.format(
+            linkfile=linkfile,
+        ),
+    )
+    assert fakelog.mock_calls == [debug]
+    assert os.listdir(linkdir) == []
+    assert os.path.isfile(srcfile)
+    assert not os.path.exists(linkfile)
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.link.log')
+def test_make_linkdir_clean_nested_dirs(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
+    srcnesteddir = os.path.join(srcdir, 'foo', 'bar', 'fee', 'fo')
+    os.makedirs(srcnesteddir)
+    linknesteddir = os.path.join(linkdir, 'foo', 'bar', 'fee', 'fo')
+    os.makedirs(linknesteddir)
+    srcfile = os.path.join(srcdir, 'foo', 'bar', 'fee', 'fo', 'fi')
+    linkfile = os.path.join(linkdir, 'foo', 'bar', 'fee', 'fo', 'fi')
+    with open(srcfile, 'w') as fp:
+        fp.write('source content')
+    os.symlink(srcfile, linkfile)
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        clean=True,
+    )
+    assert os.listdir(linkdir) == []
+    assert os.path.isfile(srcfile)
+    assert not os.path.exists(linkfile)
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.link.log')
+def test_make_linkdir_clean_dir_exists(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
+    srcfile = os.path.join(srcdir, 'foo')
+    linkfile = os.path.join(linkdir, 'foo')
+    olddir = os.path.join(linkdir, 'fee')
+    os.makedirs(olddir)
+    with open(srcfile, 'w') as fp:
+        fp.write('source content')
+    os.symlink(srcfile, linkfile)
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        clean=True,
+    )
+    assert os.listdir(linkdir) == ['fee']
+    assert os.listdir(olddir) == []
+    assert os.path.isfile(srcfile)
+    assert not os.path.exists(linkfile)
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.link.log')
+def test_make_linkdir_clean_file_exists(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
+    srcfile = os.path.join(srcdir, 'foo')
+    linkfile = os.path.join(linkdir, 'foo')
+    oldfile = os.path.join(linkdir, 'fee')
+    with open(oldfile, 'w') as fp:
+        fp.write('old content')
+    with open(srcfile, 'w') as fp:
+        fp.write('source content')
+    os.symlink(srcfile, linkfile)
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        clean=True,
+    )
+    assert os.listdir(linkdir) == ['fee']
+    assert os.path.isfile(oldfile)
+    with open(oldfile) as fp:
+        assert fp.read() == 'old content'
+    assert os.path.isfile(srcfile)
+    assert not os.path.exists(linkfile)
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.link.log')
+def test_make_linkdir_clean_nested_dir_exists(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
+    nesteddir = os.path.join(srcdir, 'foo')
+    os.makedirs(nesteddir)
+    srcfile = os.path.join(srcdir, 'foo', 'fee')
+    linkfile = os.path.join(linkdir, 'foo', 'fee')
+    olddir = os.path.join(linkdir, 'foo', 'fo')
+    os.makedirs(olddir)
+    with open(srcfile, 'w') as fp:
+        fp.write('source content')
+    os.symlink(srcfile, linkfile)
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        clean=True,
+    )
+    assert os.listdir(linkdir) == ['foo']
+    foodir = os.path.join(linkdir, 'foo')
+    assert os.listdir(foodir) == ['fo']
+    assert os.listdir(olddir) == []
+    assert os.path.isfile(srcfile)
+    assert not os.path.exists(linkfile)
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.link.log')
+def test_make_linkdir_clean_nested_file_exists(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
+    nesteddir = os.path.join(srcdir, 'foo')
+    os.makedirs(nesteddir)
+    srcfile = os.path.join(srcdir, 'foo', 'fee')
+    linkfile = os.path.join(linkdir, 'foo', 'fee')
+    olddir = os.path.join(linkdir, 'foo')
+    os.makedirs(olddir)
+    oldfile = os.path.join(linkdir, 'foo', 'fo')
+    with open(oldfile, 'w') as fp:
+        fp.write('old content')
+    with open(srcfile, 'w') as fp:
+        fp.write('source content')
+    os.symlink(srcfile, linkfile)
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        clean=True,
+    )
+    assert os.listdir(linkdir) == ['foo']
+    foodir = os.path.join(linkdir, 'foo')
+    assert os.listdir(foodir) == ['fo']
+    assert os.path.isfile(oldfile)
+    with open(oldfile) as fp:
+        assert fp.read() == 'old content'
+    assert os.path.isfile(srcfile)
+    assert not os.path.exists(linkfile)

@@ -54,6 +54,17 @@ def parse_args():
         help='replace existing links (default: %(default)s)',
         )
     parser.add_argument(
+        '-c',
+        '--clean',
+        action='store_true',
+        default=False,
+        help=(
+            'remove existing links (and their empty parent '
+            'directories). Supersedes all linking and '
+            'script options (default: %(default)s)'
+            ),
+        )
+    parser.add_argument(
         '-m',
         '--multiprocess',
         action='store_true',
@@ -97,7 +108,7 @@ def main():
     srcdir = util.abs_path(args.srcdir)
     linkdir = util.abs_path(args.linkdir)
     log.debug(
-        'Creating links from "{srcdir}" to "{linkdir}"...'.format(
+        'Processing links from "{srcdir}" to "{linkdir}"...'.format(
             srcdir=srcdir,
             linkdir=linkdir,
         )
@@ -108,5 +119,6 @@ def main():
         scriptname=args.script,
         runscript=args.run,
         replace=args.replace,
+        clean=args.clean,
         multiprocess=args.multiprocess,
         )
