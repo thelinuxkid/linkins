@@ -8,6 +8,10 @@ build
 eggs
 parts
 bin
+include
+lib
+local
+share
 var
 sdist
 develop-eggs
@@ -28,6 +32,7 @@ pip-log.txt
 
 #Virtualenv
 .virtual
+.virt
 
 #Ropemacs
 .ropeproject
