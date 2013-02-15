@@ -684,6 +684,12 @@ def test_make_linkdir_clean_nested_dirs(fakelog, **kwargs):
         linkdir=linkdir,
         clean=True,
     )
+    debug = mock.call.debug(
+        '{linkfile} exists. Removing.'.format(
+            linkfile=linkfile,
+        ),
+    )
+    assert fakelog.mock_calls == [debug]
     assert os.listdir(linkdir) == []
     assert os.path.isfile(srcfile)
     assert not os.path.exists(linkfile)
@@ -704,6 +710,12 @@ def test_make_linkdir_clean_dir_exists(fakelog, **kwargs):
         linkdir=linkdir,
         clean=True,
     )
+    debug = mock.call.debug(
+        '{linkfile} exists. Removing.'.format(
+            linkfile=linkfile,
+        ),
+    )
+    assert fakelog.mock_calls == [debug]
     assert os.listdir(linkdir) == ['fee']
     assert os.listdir(olddir) == []
     assert os.path.isfile(srcfile)
@@ -726,6 +738,12 @@ def test_make_linkdir_clean_file_exists(fakelog, **kwargs):
         linkdir=linkdir,
         clean=True,
     )
+    debug = mock.call.debug(
+        '{linkfile} exists. Removing.'.format(
+            linkfile=linkfile,
+        ),
+    )
+    assert fakelog.mock_calls == [debug]
     assert os.listdir(linkdir) == ['fee']
     assert os.path.isfile(oldfile)
     with open(oldfile) as fp:
@@ -751,6 +769,12 @@ def test_make_linkdir_clean_nested_dir_exists(fakelog, **kwargs):
         linkdir=linkdir,
         clean=True,
     )
+    debug = mock.call.debug(
+        '{linkfile} exists. Removing.'.format(
+            linkfile=linkfile,
+        ),
+    )
+    assert fakelog.mock_calls == [debug]
     assert os.listdir(linkdir) == ['foo']
     foodir = os.path.join(linkdir, 'foo')
     assert os.listdir(foodir) == ['fo']
@@ -779,6 +803,12 @@ def test_make_linkdir_clean_nested_file_exists(fakelog, **kwargs):
         linkdir=linkdir,
         clean=True,
     )
+    debug = mock.call.debug(
+        '{linkfile} exists. Removing.'.format(
+            linkfile=linkfile,
+        ),
+    )
+    assert fakelog.mock_calls == [debug]
     assert os.listdir(linkdir) == ['foo']
     foodir = os.path.join(linkdir, 'foo')
     assert os.listdir(foodir) == ['fo']
