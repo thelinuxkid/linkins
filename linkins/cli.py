@@ -60,8 +60,8 @@ def parse_args():
         default=False,
         help=(
             'remove existing links (and their empty parent '
-            'directories). Supersedes all linking and '
-            'script options (default: %(default)s)'
+            'directories). Supersedes --replace and --run'
+            '(default: %(default)s)'
             ),
         )
     parser.add_argument(
