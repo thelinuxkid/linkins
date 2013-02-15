@@ -30,7 +30,7 @@ def _clean(
     pathtail = os.path.relpath(path, srcdir)
     linkpath = os.path.join(linkdir, pathtail)
     # Avoid a possible . at the end of path, e.g., "/foo/."
-    linkpath = os.path.abspath(linkpath)
+    linkpath = os.path.normpath(linkpath)
     for file_ in files:
         linkfile = os.path.join(linkpath, file_)
         if os.path.lexists(linkfile):
@@ -101,6 +101,18 @@ def _script(
           multiprocess=multiprocess,
       )
 
+def _exclude(path, files, exclude):
+    for file_ in exclude:
+        out = os.path.relpath(file_, path)
+        if out in files:
+            log.debug(
+                'Excluding {file_}'.format(
+                    file_=file_,
+                )
+            )
+            files.remove(out)
+    return files
+
 def make(
         srcdir,
         linkdir,
@@ -109,7 +121,10 @@ def make(
         replace=False,
         clean=False,
         multiprocess=False,
+        exclude=None,
 ):
+    if exclude is None:
+        exclude = []
     if not os.path.exists(srcdir):
         raise ValueError(
             'Target directory "{srcdir}" does not exist'.format(
@@ -123,6 +138,15 @@ def make(
             )
         )
     for (path, dirs, files) in os.walk(srcdir):
+        pathtail = os.path.relpath(path, srcdir)
+        if pathtail in exclude:
+            log.debug(
+                'Excluding {pathtail}'.format(
+                    pathtail=pathtail,
+                )
+            )
+            continue
+        files = _exclude(pathtail, files, exclude)
         scriptsrc = None
         if scriptname is not None and scriptname in files:
             scriptsrc = os.path.join(path, scriptname)
