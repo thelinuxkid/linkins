@@ -1,3 +1,4 @@
+import re
 import os
 import errno
 import logging
@@ -100,17 +101,35 @@ def _script(
           multiprocess=multiprocess,
       )
 
-def _exclude(path, files, exclude):
-    for file_ in exclude:
-        out = os.path.relpath(file_, path)
-        if out in files:
+def _exclude_regex(path, exclude):
+    for regex in exclude:
+        if regex.match(path):
+            return True
+    return False
+
+def _exclude(srcdir, path, files, exclude):
+    pathtail = os.path.relpath(path, srcdir)
+    if _exclude_regex(pathtail, exclude):
+        log.debug(
+            'Excluding {pathtail}'.format(
+                pathtail=pathtail,
+            )
+        )
+        return
+    include = []
+    for file_ in files:
+        filetail = os.path.join(pathtail, file_)
+        # Avoid paths like ./foo
+        filetail = os.path.normpath(filetail)
+        if _exclude_regex(filetail, exclude):
             log.debug(
-                'Excluding {file_}'.format(
-                    file_=file_,
+                'Excluding {filetail}'.format(
+                    filetail=filetail,
                 )
             )
-            files.remove(out)
-    return files
+            continue
+        include.append(file_)
+    return include
 
 def make(
         srcdir,
@@ -136,16 +155,11 @@ def make(
                 linkdir=linkdir,
             )
         )
+    exclude_regex = [re.compile(file_) for file_ in exclude]
     for (path, dirs, files) in os.walk(srcdir):
-        pathtail = os.path.relpath(path, srcdir)
-        if pathtail in exclude:
-            log.debug(
-                'Excluding {pathtail}'.format(
-                    pathtail=pathtail,
-                )
-            )
+        files = _exclude(srcdir, path, files, exclude_regex)
+        if not files:
             continue
-        files = _exclude(pathtail, files, exclude)
         scriptsrc = None
         if scriptname is not None and scriptname in files:
             scriptsrc = os.path.join(path, scriptname)
