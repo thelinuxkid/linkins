@@ -1036,3 +1036,26 @@ def test_make_linkdir_exclude_other(fakelog, **kwargs):
     assert os.listdir(linkdir) == ['foo']
     assert os.path.isfile(srcfile)
     assert os.path.islink(linkfile)
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.link.log')
+def test_make_linkdir_exclude_clean(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
+    srcfile = os.path.join(srcdir, 'foo')
+    linkfile = os.path.join(linkdir, 'foo')
+    with open(srcfile, 'w') as fp:
+        fp.write('source content')
+    os.symlink(srcfile, linkfile)
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        exclude=['foo'],
+        clean=True,
+    )
+    debug = mock.call.debug(
+        'Excluding foo',
+    )
+    assert fakelog.mock_calls == [debug]
+    assert os.listdir(linkdir) == ['foo']
+    assert os.path.isfile(srcfile)
+    assert os.path.islink(linkfile)
