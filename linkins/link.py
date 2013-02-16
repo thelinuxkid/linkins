@@ -75,7 +75,6 @@ def _link(
 
 def _script(
         scriptsrc,
-        path,
         srcdir,
         linkdir,
         multiprocess,
@@ -170,7 +169,6 @@ def make(
         if scriptsrc and runscript:
             _script(
                 scriptsrc,
-                path,
                 srcdir,
                 linkdir,
                 multiprocess,

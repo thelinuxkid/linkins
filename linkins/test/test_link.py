@@ -1059,3 +1059,25 @@ def test_make_linkdir_exclude_clean(fakelog, **kwargs):
     assert os.listdir(linkdir) == ['foo']
     assert os.path.isfile(srcfile)
     assert os.path.islink(linkfile)
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.link.log')
+@mock.patch('linkins.script.runscript')
+def test_make_linkdir_exclude_script(fakerun, fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
+    scriptfile = os.path.join(srcdir, 'foo-script')
+    with open(scriptfile, 'w') as fp:
+        fp.write('script content')
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        scriptname='foo-script',
+        runscript=True,
+        exclude=['foo-script'],
+    )
+    assert fakerun.mock_calls == []
+    debug = mock.call.debug(
+        'Excluding foo-script'
+    )
+    assert fakelog.mock_calls == [debug]
+    assert os.listdir(linkdir) == []
