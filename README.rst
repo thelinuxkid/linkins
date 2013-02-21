@@ -102,6 +102,43 @@ outputted to) and MSG is the message outputted by the script.
 
 If the -q option is used the script's output will be not be shown.
 
+Command line options
+====================
+
+--exclude
+---------
+
+The --exclude option takes a list of arguments separated by
+whitespace. These arguments can be paths or regular expressions. Any
+directories or files in TARGET_DIR which match the arguments will be
+excluded from the operation. You can use --exclude in conjunction with
+any other operation.
+
+--include
+---------
+
+Without the --exclude option, this option doesn't have much use. You
+can use it to *not exclude* directories or files. Like --exclude it
+takes a list of arguments separated by whitespace which can be either
+paths or regular expressions.
+
+--replace
+---------
+
+You can use the --replace option to delete and relink links which
+already exist in LINK_DIR. Only links which link to files in
+TARGET_DIR will be replaced. Any other directories, files or links in
+LINK_DIR will be left untouched.
+
+--clean
+-------
+
+You can use the --clean option to delete links which already exist in
+LINK_DIR. Only links which link to files in TARGET_DIR will be
+replaced. Any other directories, files or links in LINK_DIR will be
+left untouched. This operation has precedence over replacing links and
+running scripts. --clean will also remove empty parent directories.
+
 Developing
 ==========
 
