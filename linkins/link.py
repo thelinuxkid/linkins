@@ -129,7 +129,7 @@ def _exclude(
             include,
     ):
         log.debug(
-            'Excluding {pathtail}'.format(
+            'Excluding directory {pathtail}'.format(
                 pathtail=pathtail,
             )
         )
@@ -145,7 +145,7 @@ def _exclude(
                 include,
         ):
             log.debug(
-                'Excluding {filetail}'.format(
+                'Excluding file {filetail}'.format(
                     filetail=filetail,
                 )
             )
