@@ -101,35 +101,57 @@ def _script(
           multiprocess=multiprocess,
       )
 
-def _exclude_regex(path, exclude):
-    for regex in exclude:
-        if regex.match(path):
-            return True
+def _exclude_regex(
+        path,
+        exclude,
+        include,
+):
+    for exclude_regex in exclude:
+        if not exclude_regex.match(path):
+            continue
+        for include_regex in include:
+            if include_regex.match(path):
+                return False
+        return True
     return False
 
-def _exclude(srcdir, path, files, exclude):
+def _exclude(
+        srcdir,
+        path,
+        files,
+        exclude,
+        include,
+):
     pathtail = os.path.relpath(path, srcdir)
-    if _exclude_regex(pathtail, exclude):
+    if _exclude_regex(
+            pathtail,
+            exclude,
+            include,
+    ):
         log.debug(
             'Excluding {pathtail}'.format(
                 pathtail=pathtail,
             )
         )
         return
-    include = []
+    result = []
     for file_ in files:
         filetail = os.path.join(pathtail, file_)
         # Avoid paths like ./foo
         filetail = os.path.normpath(filetail)
-        if _exclude_regex(filetail, exclude):
+        if _exclude_regex(
+                filetail,
+                exclude,
+                include,
+        ):
             log.debug(
                 'Excluding {filetail}'.format(
                     filetail=filetail,
                 )
             )
             continue
-        include.append(file_)
-    return include
+        result.append(file_)
+    return result
 
 def make(
         srcdir,
@@ -140,9 +162,12 @@ def make(
         clean=False,
         multiprocess=False,
         exclude=None,
+        include=None,
 ):
     if exclude is None:
         exclude = []
+    if include is None:
+        include = []
     if not os.path.exists(srcdir):
         raise ValueError(
             'Target directory "{srcdir}" does not exist'.format(
@@ -156,8 +181,15 @@ def make(
             )
         )
     exclude_regex = [re.compile(file_) for file_ in exclude]
+    include_regex = [re.compile(file_) for file_ in include]
     for (path, dirs, files) in os.walk(srcdir):
-        files = _exclude(srcdir, path, files, exclude_regex)
+        files = _exclude(
+            srcdir,
+            path,
+            files,
+            exclude_regex,
+            include_regex,
+        )
         if not files:
             continue
         scriptsrc = None

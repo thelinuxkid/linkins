@@ -1214,3 +1214,214 @@ def test_make_linkdir_exclude_file_regex_multiple(fakelog, **kwargs):
     assert not os.path.exists(linkbar)
     assert os.path.isfile(srcfoo)
     assert not os.path.exists(linkfoo)
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.link.log')
+def test_make_linkdir_include_dir(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
+    srcpath = os.path.join(srcdir, 'foo')
+    os.makedirs(srcpath)
+    srcfile = os.path.join(srcdir, 'foo', 'bar')
+    linkfile = os.path.join(linkdir, 'foo', 'bar')
+    with open(srcfile, 'w') as fp:
+        fp.write('source content')
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        include=['foo'],
+    )
+    assert fakelog.mock_calls == []
+    assert os.listdir(linkdir) == ['foo']
+    foodir = os.path.join(linkdir, 'foo')
+    assert os.listdir(foodir) == ['bar']
+    assert os.path.isfile(srcfile)
+    assert os.path.islink(linkfile)
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.link.log')
+def test_make_linkdir_include_file(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
+    srcfile = os.path.join(srcdir, 'foo')
+    linkfile = os.path.join(linkdir, 'foo')
+    with open(srcfile, 'w') as fp:
+        fp.write('source content')
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        include=['foo'],
+    )
+    assert fakelog.mock_calls == []
+    assert os.listdir(linkdir) == ['foo']
+    assert os.path.isfile(srcfile)
+    assert os.path.islink(linkfile)
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.link.log')
+def test_make_linkdir_include_dir_regex(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
+    srcpath = os.path.join(srcdir, 'foo')
+    os.makedirs(srcpath)
+    srcfile = os.path.join(srcdir, 'foo', 'bar')
+    linkfile = os.path.join(linkdir, 'foo', 'bar')
+    with open(srcfile, 'w') as fp:
+        fp.write('source content')
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        include=['f.*'],
+    )
+    assert fakelog.mock_calls == []
+    assert os.listdir(linkdir) == ['foo']
+    foodir = os.path.join(linkdir, 'foo')
+    assert os.listdir(foodir) == ['bar']
+    assert os.path.isfile(srcfile)
+    assert os.path.islink(linkfile)
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.link.log')
+def test_make_linkdir_include_file_regex(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
+    srcfile = os.path.join(srcdir, 'foo')
+    linkfile = os.path.join(linkdir, 'foo')
+    with open(srcfile, 'w') as fp:
+        fp.write('source content')
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        include=['f.*'],
+    )
+    assert fakelog.mock_calls == []
+    assert os.listdir(linkdir) == ['foo']
+    assert os.path.isfile(srcfile)
+    assert os.path.islink(linkfile)
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.link.log')
+def test_make_linkdir_include_empty(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
+    srcfile = os.path.join(srcdir, 'foo')
+    linkfile = os.path.join(linkdir, 'foo')
+    with open(srcfile, 'w') as fp:
+        fp.write('source content')
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        include=[],
+    )
+    assert fakelog.mock_calls == []
+    assert os.listdir(linkdir) == ['foo']
+    assert os.path.isfile(srcfile)
+    assert os.path.islink(linkfile)
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.link.log')
+def test_make_linkdir_include_other(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
+    srcfile = os.path.join(srcdir, 'foo')
+    linkfile = os.path.join(linkdir, 'foo')
+    with open(srcfile, 'w') as fp:
+        fp.write('source content')
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        include=['fee'],
+    )
+    assert fakelog.mock_calls == []
+    assert os.listdir(linkdir) == ['foo']
+    assert os.path.isfile(srcfile)
+    assert os.path.islink(linkfile)
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.link.log')
+def test_make_linkdir_include_exclude_dir(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
+    srcpath = os.path.join(srcdir, 'foo')
+    os.makedirs(srcpath)
+    srcfile = os.path.join(srcdir, 'foo', 'bar')
+    linkfile = os.path.join(linkdir, 'foo', 'bar')
+    with open(srcfile, 'w') as fp:
+        fp.write('source content')
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        exclude=['foo'],
+        include=['foo'],
+    )
+    assert fakelog.mock_calls == []
+    assert os.listdir(linkdir) == ['foo']
+    foodir = os.path.join(linkdir, 'foo')
+    assert os.listdir(foodir) == ['bar']
+    assert os.path.isfile(srcfile)
+    assert os.path.islink(linkfile)
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.link.log')
+def test_make_linkdir_include_exclude_file(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
+    srcfile = os.path.join(srcdir, 'foo')
+    linkfile = os.path.join(linkdir, 'foo')
+    with open(srcfile, 'w') as fp:
+        fp.write('source content')
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        exclude=['foo'],
+        include=['foo'],
+    )
+    assert fakelog.mock_calls == []
+    assert os.listdir(linkdir) == ['foo']
+    assert os.path.isfile(srcfile)
+    assert os.path.islink(linkfile)
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.link.log')
+def test_make_linkdir_include_multiple_exclude(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
+    linkbar = os.path.join(linkdir, 'bar')
+    srcbar = os.path.join(srcdir, 'bar')
+    with open(srcbar, 'w') as fp:
+        fp.write('fee source content')
+    srcfoo = os.path.join(srcdir, 'foo')
+    linkfoo = os.path.join(linkdir, 'foo')
+    with open(srcfoo, 'w') as fp:
+        fp.write('fi source content')
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        exclude=['foo'],
+        include=['foo', 'bar'],
+    )
+    assert fakelog.mock_calls == []
+    assert os.listdir(linkdir) == ['foo', 'bar']
+    assert os.path.isfile(srcbar)
+    assert os.path.isfile(srcfoo)
+    assert os.path.islink(linkbar)
+    assert os.path.islink(linkfoo)
+
+@tempdirs.makedirs(2)
+@mock.patch('linkins.link.log')
+def test_make_linkdir_include_exclude_multiple(fakelog, **kwargs):
+    (srcdir, linkdir) = kwargs['tempdirs_dirs']
+    linkbar = os.path.join(linkdir, 'bar')
+    srcbar = os.path.join(srcdir, 'bar')
+    with open(srcbar, 'w') as fp:
+        fp.write('bar source content')
+    srcfoo = os.path.join(srcdir, 'foo')
+    linkfoo = os.path.join(linkdir, 'foo')
+    with open(srcfoo, 'w') as fp:
+        fp.write('foo source content')
+    link.make(
+        srcdir=srcdir,
+        linkdir=linkdir,
+        exclude=['foo', 'bar'],
+        include=['bar'],
+    )
+    debug = mock.call.debug(
+        'Excluding foo'
+    )
+    assert fakelog.mock_calls == [debug]
+    assert os.listdir(linkdir) == ['bar']
+    assert os.path.isfile(srcbar)
+    assert os.path.isfile(srcfoo)
+    assert os.path.islink(linkbar)
+    assert not os.path.exists(linkfoo)
