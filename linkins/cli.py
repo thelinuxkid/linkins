@@ -79,6 +79,14 @@ def parse_args():
         nargs='+',
         help='exclude files matching PATTERN from all operations'
         )
+    parser.add_argument(
+        '-i',
+        '--include',
+        metavar='PATTERN',
+        type=str,
+        nargs='+',
+        help='do not exclude files matching PATTERN from all operations'
+        )
     loggroup = parser.add_mutually_exclusive_group()
     loggroup.add_argument(
         '-v',
@@ -130,4 +138,5 @@ def main():
         clean=args.clean,
         multiprocess=args.multiprocess,
         exclude=args.exclude,
+        include=args.include,
         )
