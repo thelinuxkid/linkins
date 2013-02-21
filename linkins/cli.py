@@ -60,7 +60,7 @@ def parse_args():
         default=False,
         help=(
             'remove existing links (and their empty parent '
-            'directories). Supersedes --replace and --run'
+            'directories). Supersedes --replace and --run '
             '(default: %(default)s)'
             ),
         )
