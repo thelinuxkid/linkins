@@ -14,11 +14,11 @@ Installation
 
 Install using pip::
 
-    pip install pyusps
+    pip install linkins
 
 or easy_install::
 
-    easy_install pyusps
+    easy_install linkins
 
 Usage
 =====
