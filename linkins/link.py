@@ -49,7 +49,7 @@ def _link(
         path,
         srcdir,
         linkdir,
-        replace,
+        force,
 ):
     for file_ in files:
         srcpath = os.path.join(path, file_)
@@ -59,7 +59,7 @@ def _link(
         if not os.path.exists(pathexist):
             os.makedirs(pathexist)
         if os.path.lexists(linkpath):
-            if not replace:
+            if not force:
                 log.warn(
                     '{linkpath} already exists. Not linking.'.format(
                         linkpath=linkpath,
@@ -158,7 +158,7 @@ def make(
         linkdir,
         scriptname=None,
         runscript=False,
-        replace=False,
+        force=False,
         clean=False,
         multiprocess=False,
         exclude=None,
@@ -209,7 +209,7 @@ def make(
             path,
             srcdir,
             linkdir,
-            replace,
+            force,
         )
         # Don't run scriptsrc if it's None or empty
         if scriptsrc and runscript:

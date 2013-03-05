@@ -123,10 +123,10 @@ can use it to *not exclude* directories or files. Like --exclude it
 takes a list of arguments separated by whitespace which can be either
 paths or regular expressions.
 
---replace
----------
+--force
+-------
 
-You can use the --replace option to delete and relink links which
+You can use the --force option to delete and relink links which
 already exist in LINK_DIR. Only links which link to files in
 TARGET_DIR will be replaced. Any other directories, files or links in
 LINK_DIR will be left untouched.
@@ -136,7 +136,7 @@ LINK_DIR will be left untouched.
 
 You can use the --clean option to delete links which already exist in
 LINK_DIR. Only links which link to files in TARGET_DIR will be
-replaced. Any other directories, files or links in LINK_DIR will be
+removed. Any other directories, files or links in LINK_DIR will be
 left untouched. This operation has precedence over replacing links and
 running scripts. --clean will also remove empty parent directories.
 

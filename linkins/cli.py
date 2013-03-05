@@ -48,8 +48,8 @@ def parse_args():
             ),
         )
     parser.add_argument(
-        '-p',
-        '--replace',
+        '-f',
+        '--force',
         action='store_true',
         default=False,
         help='replace existing links (default: %(default)s)',
@@ -61,7 +61,7 @@ def parse_args():
         default=False,
         help=(
             'remove existing links (and their empty parent '
-            'directories). Supersedes --replace and --run '
+            'directories). Supersedes --force and --run '
             '(default: %(default)s)'
             ),
         )
@@ -137,7 +137,7 @@ def main():
             linkdir=linkdir,
             scriptname=args.script,
             runscript=args.run,
-            replace=args.replace,
+            force=args.force,
             clean=args.clean,
             multiprocess=args.multiprocess,
             exclude=args.exclude,

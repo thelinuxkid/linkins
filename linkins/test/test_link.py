@@ -279,7 +279,7 @@ def test_make_linkdir_has_link(fakelog, **kwargs):
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
-def test_make_linkdir_replace_file(fakelog, **kwargs):
+def test_make_linkdir_force_file(fakelog, **kwargs):
     (srcdir, linkdir) = kwargs['tempdirs_dirs']
     srcfile = os.path.join(srcdir, 'foo')
     linkfile = os.path.join(linkdir, 'foo')
@@ -290,7 +290,7 @@ def test_make_linkdir_replace_file(fakelog, **kwargs):
     link.make(
         srcdir=srcdir,
         linkdir=linkdir,
-        replace=True,
+        force=True,
     )
     debug = mock.call.debug(
         '{linkfile} already exists. Replacing.'.format(
@@ -306,7 +306,7 @@ def test_make_linkdir_replace_file(fakelog, **kwargs):
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
-def test_make_linkdir_replace_same_link(fakelog, **kwargs):
+def test_make_linkdir_force_same_link(fakelog, **kwargs):
     (srcdir, linkdir) = kwargs['tempdirs_dirs']
     srcfile = os.path.join(srcdir, 'foo')
     linkfile = os.path.join(linkdir, 'foo')
@@ -316,7 +316,7 @@ def test_make_linkdir_replace_same_link(fakelog, **kwargs):
     link.make(
         srcdir=srcdir,
         linkdir=linkdir,
-        replace=True,
+        force=True,
     )
     debug = mock.call.debug(
         '{linkfile} already exists. Replacing.'.format(
@@ -332,7 +332,7 @@ def test_make_linkdir_replace_same_link(fakelog, **kwargs):
 
 @tempdirs.makedirs(3)
 @mock.patch('linkins.link.log')
-def test_make_linkdir_replace_different_link(
+def test_make_linkdir_force_different_link(
         fakelog,
         **kwargs
 ):
@@ -348,7 +348,7 @@ def test_make_linkdir_replace_different_link(
     link.make(
         srcdir=srcdir,
         linkdir=linkdir,
-        replace=True,
+        force=True,
     )
     debug = mock.call.debug(
         '{linkfile} already exists. Replacing.'.format(
@@ -384,7 +384,7 @@ def test_make_linkdir_unlink_oserror(
         link.make,
         srcdir=srcdir,
         linkdir=linkdir,
-        replace=True,
+        force=True,
         )
     debug = mock.call.debug(
         '{linkfile} already exists. Replacing.'.format(
@@ -421,7 +421,7 @@ def test_make_linkdir_unlink_oserror_enoent(
     link.make(
         srcdir=srcdir,
         linkdir=linkdir,
-        replace=True,
+        force=True,
     )
     debug = mock.call.debug(
         '{linkfile} already exists. Replacing.'.format(
