@@ -23,11 +23,12 @@ or easy_install::
 Usage
 =====
 
-The linkins command takes two positional arguments: the directory
-which has the files to link and the destination directory. These show
-up in the help messages as TARGET_DIR and LINK_DIR, respectively::
+The linkins command takes two positional arguments: a list of
+directories which have the files to link and the destination
+directory. These show up in the help messages as TARGET_DIR and
+LINK_DIR, respectively::
 
-    linkins TARGET_DIR LINK_DIR
+    linkins TARGET_DIR [TARGET_DIR ...] LINK_DIR
 
 It also supports a number of optional arguments. To see all the
 supported options you can invoke the help menu::

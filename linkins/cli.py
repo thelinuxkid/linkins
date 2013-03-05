@@ -16,7 +16,8 @@ def parse_args():
         'srcdir',
         metavar='TARGET_DIR',
         type=str,
-        help='path to the directory structure to be linked',
+        nargs='+',
+        help='path(s) to the directory structure to be linked',
     )
     parser.add_argument(
         'linkdir',
@@ -121,22 +122,24 @@ def main():
         format='%(name)s: %(levelname)s: %(message)s',
         )
 
-    srcdir = util.abs_path(args.srcdir)
+    srcdirs = args.srcdir
     linkdir = util.abs_path(args.linkdir)
-    log.debug(
-        'Processing links from "{srcdir}" to "{linkdir}"...'.format(
+    for srcdir in srcdirs:
+        srcdir = util.abs_path(srcdir)
+        log.debug(
+            'Processing links from "{srcdir}" to "{linkdir}"...'.format(
+                srcdir=srcdir,
+                linkdir=linkdir,
+            )
+        )
+        link.make(
             srcdir=srcdir,
             linkdir=linkdir,
-        )
-    )
-    link.make(
-        srcdir=srcdir,
-        linkdir=linkdir,
-        scriptname=args.script,
-        runscript=args.run,
-        replace=args.replace,
-        clean=args.clean,
-        multiprocess=args.multiprocess,
-        exclude=args.exclude,
-        include=args.include,
-        )
+            scriptname=args.script,
+            runscript=args.run,
+            replace=args.replace,
+            clean=args.clean,
+            multiprocess=args.multiprocess,
+            exclude=args.exclude,
+            include=args.include,
+            )
