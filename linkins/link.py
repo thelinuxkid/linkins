@@ -183,6 +183,9 @@ def make(
     exclude_regex = [re.compile(file_) for file_ in exclude]
     include_regex = [re.compile(file_) for file_ in include]
     for (path, dirs, files) in os.walk(srcdir):
+        # Same order, for unittests
+        files.sort()
+        dirs.sort()
         files = _exclude(
             srcdir,
             path,

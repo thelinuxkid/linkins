@@ -958,13 +958,13 @@ def test_make_linkdir_exclude_multiple(fakelog, **kwargs):
         linkdir=linkdir,
         exclude=['foo', 'bar'],
     )
-    debugbar = mock.call.debug(
-        'Excluding file bar'
-    )
     debugfoo = mock.call.debug(
         'Excluding file foo'
     )
-    assert fakelog.mock_calls == [debugfoo, debugbar]
+    debugbar = mock.call.debug(
+        'Excluding file bar'
+    )
+    assert fakelog.mock_calls == [debugbar, debugfoo]
     assert os.listdir(linkdir) == []
     assert os.path.isfile(srcbar)
     assert os.path.isfile(srcfoo)
@@ -1202,13 +1202,13 @@ def test_make_linkdir_exclude_file_regex_multiple(fakelog, **kwargs):
         linkdir=linkdir,
         exclude=['^f.*$', 'b.*'],
     )
-    foodebug = mock.call.debug(
-        'Excluding file foo'
-    )
     bardebug = mock.call.debug(
         'Excluding file bar'
     )
-    assert fakelog.mock_calls == [foodebug, bardebug]
+    foodebug = mock.call.debug(
+        'Excluding file foo'
+    )
+    assert fakelog.mock_calls == [bardebug, foodebug]
     assert os.listdir(linkdir) == []
     assert os.path.isfile(srcbar)
     assert not os.path.exists(linkbar)
@@ -1392,7 +1392,7 @@ def test_make_linkdir_include_multiple_exclude(fakelog, **kwargs):
         include=['foo', 'bar'],
     )
     assert fakelog.mock_calls == []
-    assert os.listdir(linkdir) == ['foo', 'bar']
+    assert os.listdir(linkdir) == ['bar', 'foo']
     assert os.path.isfile(srcbar)
     assert os.path.isfile(srcfoo)
     assert os.path.islink(linkbar)
