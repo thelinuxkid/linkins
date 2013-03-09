@@ -30,7 +30,8 @@ LINK_DIR, respectively::
 
     linkins TARGET_DIR [TARGET_DIR ...] LINK_DIR
 
-It also supports a number of optional arguments. To see all the
+TARGET_DIRs are processed in the ordered specified by the user.
+Linkins also supports a number of optional arguments. To see all the
 supported options you can invoke the help menu::
 
     linkins --help
@@ -92,14 +93,15 @@ be able to obtain the dpkg lock.
 Output
 ------
 
-A script's output is redirected to linkins' log and is logged at level
-INFO. A script log line has the following form::
+A script's output is read unbuffered and it is redirected to linkins'
+log where it is logged at level INFO. A script log line has the
+following form::
 
-    SCRIPT: STREAM: MSG
+    SCRIPT_PATH: SCRIPT: MSG
 
-where SCRIPT is the relative path from TARGET_DIR to the script,
-STREAM is one of STDOUT or STDERR (depending on the stream the script
-outputted to) and MSG is the message outputted by the script.
+where SCRIPT_PATH is the relative path from TARGET_DIR to the script,
+SCRIPT is the word SCRIPT and MSG is the message outputted by the
+script to either STDOUT or STDERR.
 
 If the -q option is used the script's output will be not be shown.
 
