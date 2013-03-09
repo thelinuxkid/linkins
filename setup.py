@@ -27,8 +27,12 @@ with open(path) as fp:
 
 setup(
     name='linkins',
-    version='0.0.7.2',
-    description='linkins -- Safely link directory structures',
+    version='0.0.7.3',
+    description=(
+        'Links a directory structure and optionally executes '
+        'user-defined scripts at each level of the directory '
+        'hierarchy'
+    ),
     long_description=long_description,
     author='Andres Buritica',
     author_email='andres@thelinuxkid.com',
