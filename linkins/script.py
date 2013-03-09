@@ -3,37 +3,33 @@ import logging
 import subprocess
 import multiprocessing
 
+from linkins.util import unbuffered_stream
+
 log = logging.getLogger(__name__)
 log.propagate = False
 handler = logging.StreamHandler()
 fmt = logging.Formatter(
-    fmt='%(script)s: %(stream)s: %(message)s',
+    fmt='%(script)s: %(source)s: %(message)s',
 )
 handler.setFormatter(fmt)
 log.addHandler(handler)
-
-def _logscript(fp, **kwargs):
-    for line in fp:
-        line = line.strip()
-        log.info(line, extra=kwargs)
 
 def _run(cmd, name):
     proc = subprocess.Popen(
         cmd,
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        # Make all end-of-lines '\n'
+        universal_newlines=True,
     )
-    with proc.stderr as fp:
-        _logscript(
-            fp,
-            script=name,
-            stream='STDERR',
-        )
-    with proc.stdout as fp:
-        _logscript(
-            fp,
-            script=name,
-            stream='STDOUT',
+    extra = dict([
+        ('script', name),
+        ('source', 'SCRIPT'),
+    ])
+    for line in unbuffered_stream(proc):
+        log.info(
+            line,
+            extra=extra,
         )
 
 def runscript(path, *args, **kwargs):
