@@ -14,6 +14,7 @@ fmt = logging.Formatter(
 handler.setFormatter(fmt)
 log.addHandler(handler)
 
+
 def _run(cmd, name):
     proc = subprocess.Popen(
         cmd,
@@ -31,6 +32,7 @@ def _run(cmd, name):
             line,
             extra=extra,
         )
+
 
 def runscript(path, *args, **kwargs):
     multi = kwargs.get('multiprocess', False)

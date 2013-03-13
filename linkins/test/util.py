@@ -1,5 +1,6 @@
 import mock
 
+
 class mock_call_with_name(object):
     """Like mock.call but takes the name of the call as its first
     argument. mock.call requires chained methods to define its
@@ -12,4 +13,4 @@ class mock_call_with_name(object):
     def __new__(self, name, *args, **kwargs):
         return mock._Call(
             (name, args, kwargs)
-            )
+        )

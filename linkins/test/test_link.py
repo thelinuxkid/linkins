@@ -7,6 +7,7 @@ import tempdirs
 
 from linkins import link
 
+
 @tempdirs.makedirs(2)
 def test_make_simple(**kwargs):
     (srcdir, linkdir) = kwargs['tempdirs_dirs']
@@ -23,6 +24,7 @@ def test_make_simple(**kwargs):
     assert os.path.islink(linkfile)
     with open(linkfile) as fp:
         assert fp.read() == 'source content'
+
 
 @tempdirs.makedirs(2)
 def test_make_nested_dirs(**kwargs):
@@ -47,6 +49,7 @@ def test_make_nested_dirs(**kwargs):
     with open(linkfile) as fp:
         assert fp.read() == 'source content'
 
+
 @tempdirs.makedirs(2)
 def test_make_nested_dirs_empty(**kwargs):
     (srcdir, linkdir) = kwargs['tempdirs_dirs']
@@ -57,6 +60,7 @@ def test_make_nested_dirs_empty(**kwargs):
         linkdir=linkdir,
     )
     assert os.listdir(linkdir) == []
+
 
 @tempdirs.makedirs(2)
 def test_make_many_dirs(**kwargs):
@@ -91,6 +95,7 @@ def test_make_many_dirs(**kwargs):
     with open(folink) as fp:
         assert fp.read() == 'fo source content'
 
+
 @tempdirs.makedirs(2)
 def test_make_many_files(**kwargs):
     (srcdir, linkdir) = kwargs['tempdirs_dirs']
@@ -116,6 +121,7 @@ def test_make_many_files(**kwargs):
     with open(barlink) as fp:
         assert fp.read() == 'bar source content'
 
+
 @tempdirs.makedirs()
 def test_make_bad_linkdir(**kwargs):
     (srcdir,) = kwargs['tempdirs_dirs']
@@ -124,9 +130,10 @@ def test_make_bad_linkdir(**kwargs):
         link.make,
         srcdir=srcdir,
         linkdir='',
-        )
+    )
     assert res.type == ValueError
     assert res.value.message == 'Link directory "" does not exist'
+
 
 @tempdirs.makedirs()
 def test_make_bad_srcdir(**kwargs):
@@ -136,9 +143,10 @@ def test_make_bad_srcdir(**kwargs):
         link.make,
         srcdir='',
         linkdir=linkdir,
-        )
+    )
     assert res.type == ValueError
     assert res.value.message == 'Target directory "" does not exist'
+
 
 @tempdirs.makedirs(2)
 def test_make_dir_exists(**kwargs):
@@ -159,6 +167,7 @@ def test_make_dir_exists(**kwargs):
     assert os.path.islink(linkfile)
     with open(linkfile) as fp:
         assert fp.read() == 'source content'
+
 
 @tempdirs.makedirs(2)
 def test_make_file_exists(**kwargs):
@@ -183,6 +192,7 @@ def test_make_file_exists(**kwargs):
     with open(linkfile) as fp:
         assert fp.read() == 'source content'
 
+
 @tempdirs.makedirs(2)
 def test_make_nested_dir_exists(**kwargs):
     (srcdir, linkdir) = kwargs['tempdirs_dirs']
@@ -206,6 +216,7 @@ def test_make_nested_dir_exists(**kwargs):
     assert os.path.islink(linkfile)
     with open(linkfile) as fp:
         assert fp.read() == 'source content'
+
 
 @tempdirs.makedirs(2)
 def test_make_nested_file_exists(**kwargs):
@@ -236,6 +247,7 @@ def test_make_nested_file_exists(**kwargs):
     with open(linkfile) as fp:
         assert fp.read() == 'source content'
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
 def test_make_linkdir_has_file(fakelog, **kwargs):
@@ -257,6 +269,7 @@ def test_make_linkdir_has_file(fakelog, **kwargs):
     )
     assert fakelog.mock_calls == [error]
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
 def test_make_linkdir_has_link(fakelog, **kwargs):
@@ -276,6 +289,7 @@ def test_make_linkdir_has_link(fakelog, **kwargs):
         ),
     )
     assert fakelog.mock_calls == [error]
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
@@ -304,6 +318,7 @@ def test_make_linkdir_force_file(fakelog, **kwargs):
     with open(linkfile) as fp:
         assert fp.read() == 'source content'
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
 def test_make_linkdir_force_same_link(fakelog, **kwargs):
@@ -329,6 +344,7 @@ def test_make_linkdir_force_same_link(fakelog, **kwargs):
     assert os.path.islink(linkfile)
     with open(linkfile) as fp:
         assert fp.read() == 'source content'
+
 
 @tempdirs.makedirs(3)
 @mock.patch('linkins.link.log')
@@ -362,6 +378,7 @@ def test_make_linkdir_force_different_link(
     with open(linkfile) as fp:
         assert fp.read() == 'source content'
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
 @mock.patch('os.unlink')
@@ -385,7 +402,7 @@ def test_make_linkdir_unlink_oserror(
         srcdir=srcdir,
         linkdir=linkdir,
         force=True,
-        )
+    )
     debug = mock.call.debug(
         '{linkfile} already exists. Replacing.'.format(
             linkfile=linkfile,
@@ -396,6 +413,7 @@ def test_make_linkdir_unlink_oserror(
     assert fakeunlink.mock_calls == [unlink]
     assert res.type == OSError
     assert res.value.errno == errno.EXDEV
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
@@ -412,6 +430,7 @@ def test_make_linkdir_unlink_oserror_enoent(
         fp.write('source content')
     with open(linkfile, 'w') as fp:
         fp.write('existing content')
+
     def side_effect(*args):
         os.remove(linkfile)
         error = OSError()
@@ -437,6 +456,7 @@ def test_make_linkdir_unlink_oserror_enoent(
     with open(linkfile) as fp:
         assert fp.read() == 'source content'
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.script.runscript')
 def test_make_script_simple(fakerun, **kwargs):
@@ -457,9 +477,10 @@ def test_make_script_simple(fakerun, **kwargs):
         '.',
         name='./foo-script',
         multiprocess=False,
-        )
+    )
     assert fakerun.mock_calls == [run]
     assert os.listdir(linkdir) == []
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.script.runscript')
@@ -485,13 +506,14 @@ def test_make_script_many_files(fakerun, **kwargs):
         '.',
         name='./foo-script',
         multiprocess=False,
-        )
+    )
     assert fakerun.mock_calls == [run]
     assert os.listdir(linkdir) == ['foo']
     assert os.path.isfile(srcfile)
     assert os.path.islink(linkfile)
     with open(linkfile) as fp:
         assert fp.read() == 'source content'
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.script.runscript')
@@ -515,9 +537,10 @@ def test_make_script_nested_dir(fakerun, **kwargs):
         'foo',
         name='foo/bar-script',
         multiprocess=False,
-        )
+    )
     assert fakerun.mock_calls == [run]
     assert os.listdir(linkdir) == ['foo']
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.script.runscript')
@@ -544,7 +567,7 @@ def test_make_script_many_scripts(fakerun, **kwargs):
         '.',
         name='./bar-script',
         multiprocess=False,
-        )
+    )
     runnested = mock.call(
         scriptnested,
         srcdir,
@@ -552,13 +575,14 @@ def test_make_script_many_scripts(fakerun, **kwargs):
         'foo',
         name='foo/bar-script',
         multiprocess=False,
-        )
+    )
     calls = [
         run,
         runnested,
-        ]
+    ]
     assert fakerun.mock_calls == calls
     assert os.listdir(linkdir) == ['foo']
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.script.runscript')
@@ -574,6 +598,7 @@ def test_make_script_no_run(fakerun, **kwargs):
     )
     assert fakerun.mock_calls == []
     assert os.listdir(linkdir) == []
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.script.runscript')
@@ -591,6 +616,7 @@ def test_make_script_no_run_nested(fakerun, **kwargs):
     )
     assert fakerun.mock_calls == []
     assert os.listdir(linkdir) == []
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.script.runscript')
@@ -613,9 +639,10 @@ def test_make_script_multiprocess(fakerun, **kwargs):
         '.',
         name='./foo-script',
         multiprocess=True,
-        )
+    )
     assert fakerun.mock_calls == [run]
     assert os.listdir(linkdir) == []
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
@@ -642,6 +669,7 @@ def test_make_linkdir_clean_file(fakelog, **kwargs):
     assert os.path.isfile(srcfile)
     assert not os.path.exists(linkfile)
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
 def test_make_linkdir_clean_link(fakelog, **kwargs):
@@ -665,6 +693,7 @@ def test_make_linkdir_clean_link(fakelog, **kwargs):
     assert os.listdir(linkdir) == []
     assert os.path.isfile(srcfile)
     assert not os.path.exists(linkfile)
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
@@ -694,6 +723,7 @@ def test_make_linkdir_clean_nested_dirs(fakelog, **kwargs):
     assert os.path.isfile(srcfile)
     assert not os.path.exists(linkfile)
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
 def test_make_linkdir_clean_dir_exists(fakelog, **kwargs):
@@ -720,6 +750,7 @@ def test_make_linkdir_clean_dir_exists(fakelog, **kwargs):
     assert os.listdir(olddir) == []
     assert os.path.isfile(srcfile)
     assert not os.path.exists(linkfile)
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
@@ -751,6 +782,7 @@ def test_make_linkdir_clean_file_exists(fakelog, **kwargs):
     assert os.path.isfile(srcfile)
     assert not os.path.exists(linkfile)
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
 def test_make_linkdir_clean_nested_dir_exists(fakelog, **kwargs):
@@ -781,6 +813,7 @@ def test_make_linkdir_clean_nested_dir_exists(fakelog, **kwargs):
     assert os.listdir(olddir) == []
     assert os.path.isfile(srcfile)
     assert not os.path.exists(linkfile)
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
@@ -818,6 +851,7 @@ def test_make_linkdir_clean_nested_file_exists(fakelog, **kwargs):
     assert os.path.isfile(srcfile)
     assert not os.path.exists(linkfile)
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
 def test_make_linkdir_exclude_dir(fakelog, **kwargs):
@@ -841,6 +875,7 @@ def test_make_linkdir_exclude_dir(fakelog, **kwargs):
     assert os.path.isfile(srcfile)
     assert not os.path.exists(linkfile)
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
 def test_make_linkdir_exclude_file(fakelog, **kwargs):
@@ -861,6 +896,7 @@ def test_make_linkdir_exclude_file(fakelog, **kwargs):
     assert os.listdir(linkdir) == []
     assert os.path.isfile(srcfile)
     assert not os.path.exists(linkfile)
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
@@ -885,6 +921,7 @@ def test_make_linkdir_exclude_nested_dir(fakelog, **kwargs):
     assert os.path.isfile(srcfile)
     assert not os.path.exists(linkfile)
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
 def test_make_linkdir_exclude_nested_file(fakelog, **kwargs):
@@ -907,6 +944,7 @@ def test_make_linkdir_exclude_nested_file(fakelog, **kwargs):
     assert os.listdir(linkdir) == []
     assert os.path.isfile(srcfile)
     assert not os.path.exists(linkfile)
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
@@ -941,6 +979,7 @@ def test_make_linkdir_exclude_many_files(fakelog, **kwargs):
     assert os.path.isfile(srcfee)
     assert not os.path.exists(linkfee)
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
 def test_make_linkdir_exclude_multiple(fakelog, **kwargs):
@@ -971,6 +1010,7 @@ def test_make_linkdir_exclude_multiple(fakelog, **kwargs):
     assert not os.path.exists(linkbar)
     assert not os.path.exists(linkfoo)
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
 def test_make_linkdir_exclude_empty(fakelog, **kwargs):
@@ -989,6 +1029,7 @@ def test_make_linkdir_exclude_empty(fakelog, **kwargs):
     assert os.path.isfile(srcfile)
     assert os.path.islink(linkfile)
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
 def test_make_linkdir_exclude_other(fakelog, **kwargs):
@@ -1006,6 +1047,7 @@ def test_make_linkdir_exclude_other(fakelog, **kwargs):
     assert os.listdir(linkdir) == ['foo']
     assert os.path.isfile(srcfile)
     assert os.path.islink(linkfile)
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
@@ -1030,6 +1072,7 @@ def test_make_linkdir_exclude_clean(fakelog, **kwargs):
     assert os.path.isfile(srcfile)
     assert os.path.islink(linkfile)
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
 @mock.patch('linkins.script.runscript')
@@ -1051,6 +1094,7 @@ def test_make_linkdir_exclude_script(fakerun, fakelog, **kwargs):
     )
     assert fakelog.mock_calls == [debug]
     assert os.listdir(linkdir) == []
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
@@ -1075,6 +1119,7 @@ def test_make_linkdir_exclude_dir_regex(fakelog, **kwargs):
     assert os.path.isfile(srcfile)
     assert not os.path.exists(linkfile)
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
 def test_make_linkdir_exclude_file_regex(fakelog, **kwargs):
@@ -1096,6 +1141,7 @@ def test_make_linkdir_exclude_file_regex(fakelog, **kwargs):
     assert os.path.isfile(srcfile)
     assert not os.path.exists(linkfile)
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
 def test_make_linkdir_exclude_file_regex_other(fakelog, **kwargs):
@@ -1113,6 +1159,7 @@ def test_make_linkdir_exclude_file_regex_other(fakelog, **kwargs):
     assert os.listdir(linkdir) == ['foo']
     assert os.path.isfile(srcfile)
     assert os.path.islink(linkfile)
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
@@ -1134,6 +1181,7 @@ def test_make_linkdir_exclude_file_regex_complex(fakelog, **kwargs):
     assert os.listdir(linkdir) == []
     assert os.path.isfile(srcfile)
     assert not os.path.exists(linkfile)
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
@@ -1157,6 +1205,7 @@ def test_make_linkdir_exclude_file_regex_nested(fakelog, **kwargs):
     assert os.listdir(linkdir) == []
     assert os.path.isfile(srcfile)
     assert not os.path.exists(linkfile)
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
@@ -1184,6 +1233,7 @@ def test_make_linkdir_exclude_file_regex_many_files(fakelog, **kwargs):
     assert os.path.islink(linkbar)
     assert os.path.isfile(srcfoo)
     assert not os.path.exists(linkfoo)
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
@@ -1215,6 +1265,7 @@ def test_make_linkdir_exclude_file_regex_multiple(fakelog, **kwargs):
     assert os.path.isfile(srcfoo)
     assert not os.path.exists(linkfoo)
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
 def test_make_linkdir_include_dir(fakelog, **kwargs):
@@ -1237,6 +1288,7 @@ def test_make_linkdir_include_dir(fakelog, **kwargs):
     assert os.path.isfile(srcfile)
     assert os.path.islink(linkfile)
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
 def test_make_linkdir_include_file(fakelog, **kwargs):
@@ -1254,6 +1306,7 @@ def test_make_linkdir_include_file(fakelog, **kwargs):
     assert os.listdir(linkdir) == ['foo']
     assert os.path.isfile(srcfile)
     assert os.path.islink(linkfile)
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
@@ -1277,6 +1330,7 @@ def test_make_linkdir_include_dir_regex(fakelog, **kwargs):
     assert os.path.isfile(srcfile)
     assert os.path.islink(linkfile)
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
 def test_make_linkdir_include_file_regex(fakelog, **kwargs):
@@ -1294,6 +1348,7 @@ def test_make_linkdir_include_file_regex(fakelog, **kwargs):
     assert os.listdir(linkdir) == ['foo']
     assert os.path.isfile(srcfile)
     assert os.path.islink(linkfile)
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
@@ -1313,6 +1368,7 @@ def test_make_linkdir_include_empty(fakelog, **kwargs):
     assert os.path.isfile(srcfile)
     assert os.path.islink(linkfile)
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
 def test_make_linkdir_include_other(fakelog, **kwargs):
@@ -1330,6 +1386,7 @@ def test_make_linkdir_include_other(fakelog, **kwargs):
     assert os.listdir(linkdir) == ['foo']
     assert os.path.isfile(srcfile)
     assert os.path.islink(linkfile)
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
@@ -1354,6 +1411,7 @@ def test_make_linkdir_include_exclude_dir(fakelog, **kwargs):
     assert os.path.isfile(srcfile)
     assert os.path.islink(linkfile)
 
+
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
 def test_make_linkdir_include_exclude_file(fakelog, **kwargs):
@@ -1372,6 +1430,7 @@ def test_make_linkdir_include_exclude_file(fakelog, **kwargs):
     assert os.listdir(linkdir) == ['foo']
     assert os.path.isfile(srcfile)
     assert os.path.islink(linkfile)
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')
@@ -1397,6 +1456,7 @@ def test_make_linkdir_include_multiple_exclude(fakelog, **kwargs):
     assert os.path.isfile(srcfoo)
     assert os.path.islink(linkbar)
     assert os.path.islink(linkfoo)
+
 
 @tempdirs.makedirs(2)
 @mock.patch('linkins.link.log')

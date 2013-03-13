@@ -5,6 +5,7 @@ from linkins import link, util
 
 log = logging.getLogger(__name__)
 
+
 def parse_args():
     parser = argparse.ArgumentParser(
         description=(
@@ -34,8 +35,8 @@ def parse_args():
             'name of the script that can be executed at each level '
             'of the target directory hierarchy. Scripts are never '
             'linked (default: %(default)s)'
-            ),
-        )
+        ),
+    )
     parser.add_argument(
         '-r',
         '--run',
@@ -45,15 +46,15 @@ def parse_args():
             'run the script (defined by --script) at each level of the '
             'target directory hierarchy it is found (default: '
             '%(default)s)'
-            ),
-        )
+        ),
+    )
     parser.add_argument(
         '-f',
         '--force',
         action='store_true',
         default=False,
         help='replace existing links (default: %(default)s)',
-        )
+    )
     parser.add_argument(
         '-c',
         '--clean',
@@ -63,15 +64,15 @@ def parse_args():
             'remove existing links (and their empty parent '
             'directories). Supersedes --force and --run '
             '(default: %(default)s)'
-            ),
-        )
+        ),
+    )
     parser.add_argument(
         '-m',
         '--multiprocess',
         action='store_true',
         default=False,
         help='run scripts as subprocesses (default: %(default)s)',
-        )
+    )
     parser.add_argument(
         '-e',
         '--exclude',
@@ -79,7 +80,7 @@ def parse_args():
         type=str,
         nargs='+',
         help='exclude files matching PATTERN from all operations'
-        )
+    )
     parser.add_argument(
         '-i',
         '--include',
@@ -87,7 +88,7 @@ def parse_args():
         type=str,
         nargs='+',
         help='do not exclude files matching PATTERN from all operations'
-        )
+    )
     loggroup = parser.add_mutually_exclusive_group()
     loggroup.add_argument(
         '-v',
@@ -95,7 +96,7 @@ def parse_args():
         action='store_true',
         default=False,
         help='output DEBUG logging statements (default: %(default)s)',
-        )
+    )
     loggroup.add_argument(
         '-q',
         '--quiet',
@@ -109,6 +110,7 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+
 def main():
     args = parse_args()
     level = logging.INFO
@@ -120,7 +122,7 @@ def main():
     logging.basicConfig(
         level=level,
         format='%(name)s: %(levelname)s: %(message)s',
-        )
+    )
 
     srcdirs = args.srcdir
     linkdir = util.abs_path(args.linkdir)
@@ -142,4 +144,4 @@ def main():
             multiprocess=args.multiprocess,
             exclude=args.exclude,
             include=args.include,
-            )
+        )

@@ -1,14 +1,17 @@
 import os
 import contextlib
 
+# Unix, Windows and old Macintosh end-of-line
+newlines = ['\n', '\r\n', '\r']
+
+
 # Avoid name clash with os.path.abspath
 def abs_path(path):
     path = os.path.expanduser(path)
     path = os.path.abspath(path)
     return path
 
-# Unix, Windows and old Macintosh end-of-line
-newlines = ['\n', '\r\n', '\r']
+
 def unbuffered_stream(proc, stream='stdout'):
     stream = getattr(proc, stream)
     with contextlib.closing(stream):

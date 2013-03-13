@@ -7,6 +7,7 @@ from linkins import script
 
 log = logging.getLogger(__name__)
 
+
 def _unlink(linkpath):
     try:
         os.unlink(linkpath)
@@ -15,12 +16,14 @@ def _unlink(linkpath):
         if e.errno != errno.ENOENT:
             raise
 
+
 def _clean_empty_dirs(path, linkdir):
     if os.listdir(path) != [] or path == linkdir:
         return
     os.rmdir(path)
     parent = os.path.dirname(path)
     _clean_empty_dirs(parent, linkdir)
+
 
 def _clean(
         files,
@@ -43,6 +46,7 @@ def _clean(
             _unlink(linkfile)
     if os.path.exists(linkpath):
         _clean_empty_dirs(linkpath, linkdir)
+
 
 def _link(
         files,
@@ -74,32 +78,34 @@ def _link(
             _unlink(linkpath)
         os.symlink(srcpath, linkpath)
 
+
 def _script(
         scriptsrc,
         srcdir,
         linkdir,
         multiprocess,
 ):
-      scriptdir = os.path.dirname(scriptsrc)
-      scripttail = os.path.relpath(scriptdir, srcdir)
-      scriptdst = os.path.join(linkdir, scripttail)
-      name = os.path.basename(scriptsrc)
-      name = os.path.join(scripttail, name)
-      if not os.path.exists(scriptdst):
-          os.makedirs(scriptdst)
-      log.debug(
-          'Running script {name}'.format(
-              name=name,
-          )
-      )
-      script.runscript(
-          scriptsrc,
-          srcdir,
-          linkdir,
-          scripttail,
-          name=name,
-          multiprocess=multiprocess,
-      )
+    scriptdir = os.path.dirname(scriptsrc)
+    scripttail = os.path.relpath(scriptdir, srcdir)
+    scriptdst = os.path.join(linkdir, scripttail)
+    name = os.path.basename(scriptsrc)
+    name = os.path.join(scripttail, name)
+    if not os.path.exists(scriptdst):
+        os.makedirs(scriptdst)
+    log.debug(
+        'Running script {name}'.format(
+            name=name,
+        )
+    )
+    script.runscript(
+        scriptsrc,
+        srcdir,
+        linkdir,
+        scripttail,
+        name=name,
+        multiprocess=multiprocess,
+    )
+
 
 def _exclude_regex(
         path,
@@ -114,6 +120,7 @@ def _exclude_regex(
                 return False
         return True
     return False
+
 
 def _exclude(
         srcdir,
@@ -152,6 +159,7 @@ def _exclude(
             continue
         result.append(file_)
     return result
+
 
 def make(
         srcdir,

@@ -4,6 +4,7 @@ import subprocess
 from linkins import script
 from linkins.test import util
 
+
 @mock.patch('multiprocessing.Process')
 @mock.patch('linkins.script.log')
 @mock.patch('subprocess.Popen')
@@ -21,7 +22,7 @@ def test_runscript_simple(fakepopen, fakelog, fakeprocess):
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         universal_newlines=True,
-        )
+    )
     read = mock.call().stdout.read(1)
     reads = [read]*5
     close = mock.call().stdout.close()
@@ -29,7 +30,7 @@ def test_runscript_simple(fakepopen, fakelog, fakeprocess):
         'info',
         'foo',
         extra={'source': 'SCRIPT', 'script': 'bar'},
-        )
+    )
     popen_calls = [
         popen,
     ]
@@ -37,10 +38,11 @@ def test_runscript_simple(fakepopen, fakelog, fakeprocess):
     popen_calls.append(close)
     log_calls = [
         out_log,
-        ]
+    ]
     assert fakepopen.mock_calls == popen_calls
     assert fakelog.mock_calls == log_calls
     assert fakeprocess.mock_calls == []
+
 
 @mock.patch('multiprocessing.Process')
 @mock.patch('linkins.script.log')
@@ -59,7 +61,7 @@ def test_runscript_args(fakepopen, fakelog, fakeprocess):
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         universal_newlines=True,
-        )
+    )
     read = mock.call().stdout.read(1)
     close = mock.call().stdout.close()
     popen_calls = [
@@ -70,6 +72,7 @@ def test_runscript_args(fakepopen, fakelog, fakeprocess):
     assert fakepopen.mock_calls == popen_calls
     assert fakelog.mock_calls == []
     assert fakeprocess.mock_calls == []
+
 
 @mock.patch('multiprocessing.Process')
 @mock.patch('linkins.script.log')
@@ -88,7 +91,7 @@ def test_runscript_name(fakepopen, fakelog, fakeprocess):
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         universal_newlines=True,
-        )
+    )
     read = mock.call().stdout.read(1)
     reads = [read]*5
     close = mock.call().stdout.close()
@@ -96,7 +99,7 @@ def test_runscript_name(fakepopen, fakelog, fakeprocess):
         'info',
         'foo',
         extra={'source': 'SCRIPT', 'script': 'foo-name'},
-        )
+    )
     popen_calls = [
         popen,
     ]
@@ -104,10 +107,11 @@ def test_runscript_name(fakepopen, fakelog, fakeprocess):
     popen_calls.append(close)
     log_calls = [
         out_log,
-        ]
+    ]
     assert fakepopen.mock_calls == popen_calls
     assert fakelog.mock_calls == log_calls
     assert fakeprocess.mock_calls == []
+
 
 @mock.patch('multiprocessing.Process')
 @mock.patch('linkins.script.log')
@@ -119,10 +123,10 @@ def test_runscript_multiprocess(fakepopen, fakelog, fakeprocess):
     process = mock.call(
         target=script._run,
         args=(['/foo/bar'], 'bar'),
-        )
+    )
     start = mock.call().start()
     calls = [
         process,
         start,
-        ]
+    ]
     assert fakeprocess.mock_calls == calls
