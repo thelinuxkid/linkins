@@ -1451,7 +1451,7 @@ def test_make_linkdir_include_multiple_exclude(fakelog, **kwargs):
         include=['foo', 'bar'],
     )
     assert fakelog.mock_calls == []
-    assert os.listdir(linkdir) == ['bar', 'foo']
+    assert sorted(os.listdir(linkdir)) == sorted(['foo', 'bar'])
     assert os.path.isfile(srcbar)
     assert os.path.isfile(srcfoo)
     assert os.path.islink(linkbar)
