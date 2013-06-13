@@ -27,7 +27,7 @@ with open(path) as fp:
 
 setup(
     name='linkins',
-    version='0.0.7.3',
+    version='0.0.7.4',
     description=(
         'Links a directory structure and optionally executes '
         'user-defined scripts at each level of the directory '
