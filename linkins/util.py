@@ -22,6 +22,9 @@ def unbuffered_stream(proc, stream='stdout'):
             if last == '' and proc.poll() is not None:
                 break
             while last not in newlines:
+                # Don't loop forever
+                if last == '' and proc.poll() is not None:
+                    break
                 out.append(last)
                 last = stream.read(1)
             out = ''.join(out)

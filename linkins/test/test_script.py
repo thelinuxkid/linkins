@@ -130,3 +130,62 @@ def test_runscript_multiprocess(fakepopen, fakelog, fakeprocess):
         start,
     ]
     assert fakeprocess.mock_calls == calls
+
+
+@mock.patch('multiprocessing.Process')
+@mock.patch('linkins.script.log')
+@mock.patch('subprocess.Popen')
+def test_runscript_while_loop(fakepopen, fakelog, fakeprocess):
+    proc = fakepopen.return_value
+    poll = proc.poll
+    poll.side_effect = [None, 0, 0]
+    read = proc.stdout.read
+    def forever():
+        yield 'f'
+        yield '\n'
+        yield ''
+        yield ''
+        raise AssertionError('Looping forever')
+    read.side_effect = forever()
+    script.runscript('/foo/bar')
+
+    popen = util.mock_call_with_name(
+        '',
+        ['/foo/bar'],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        universal_newlines=True,
+    )
+    popen_calls = [
+        popen,
+    ]
+    read = mock.call().stdout.read(1)
+    reads = [read]*3
+    popen_calls += reads
+    poll = mock.call().poll()
+    polls = [poll]*2
+    popen_calls += polls
+    popen_calls += [
+        mock.call().stdout.read(1),
+        mock.call().poll(),
+    ]
+    close = mock.call().stdout.close()
+    popen_calls.append(close)
+
+    f_log = util.mock_call_with_name(
+        'info',
+        'f',
+        extra={'source': 'SCRIPT', 'script': 'bar'},
+    )
+    empty_log = util.mock_call_with_name(
+        'info',
+        '',
+        extra={'source': 'SCRIPT', 'script': 'bar'},
+    )
+    log_calls = [
+        f_log,
+        empty_log,
+    ]
+    assert fakepopen.mock_calls == popen_calls
+    assert fakelog.mock_calls == log_calls
+    assert fakeprocess.mock_calls == []
